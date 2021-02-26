@@ -13,7 +13,7 @@ const Card = styled.div`
     max-height: 20vh;
     width: 100%;
     margin: 10px;
-    border-radius: 10px;
+    border-radius: 8px;
     background: ${colours.darkBlue}
 `
 
