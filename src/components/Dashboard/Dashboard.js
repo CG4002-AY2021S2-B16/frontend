@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 
 import AccuracyCard from '../AccuracyCard/AccuracyCard';
-import LineChart from '../LineChart/LineChart';
+import BasicLineChart from '../BasicLineChart/BasicLineChart';
 import MoveCard from '../MoveCard/MoveCard';
 import PlayCard from '../PlayCard/PlayCard';
 import PositionCard from '../PositionCard/PositionCard';
@@ -58,9 +58,10 @@ const Positions = styled.div`
 
 const Dashboard = () => {
 
-    const { data } = useSelector(state => state);
+    const { data, metadata } = useSelector(state => state);
 
     var latestDataPoint = data[data.length-1] ? data[data.length-1] : [0,0,0,0,0,0];
+    var dancerNames = metadata['dancerNames'] ? metadata['dancerNames'] : {1: "Dancer 1", 2: "Dancer 2", 3: "Dancer 3"};
 
     return (
         <Body>
@@ -73,11 +74,12 @@ const Dashboard = () => {
             </Metadata>
             <Stream>
                 <Positions>
-                    <PositionCard area="dancer1" position={latestDataPoint[1]}/>
-                    <PositionCard area="dancer2" position={latestDataPoint[2]}/>
-                    <PositionCard area="dancer3" position={latestDataPoint[3]}/>
+                    <PositionCard area="dancer1" dancer={dancerNames[1]} position={latestDataPoint[1]}/>
+                    <PositionCard area="dancer2" dancer={dancerNames[2]} position={latestDataPoint[2]}/>
+                    <PositionCard area="dancer3" dancer={dancerNames[3]} position={latestDataPoint[3]}/>
                 </Positions>
                 <MoveCard move={latestDataPoint[4]} lag={latestDataPoint[5]*1000}/>
+                <BasicLineChart grid-area="graph" data={data}/>
             </Stream>
         </Body>
     )

@@ -4,9 +4,15 @@ const types = {
     ADD_DATA_TWO: "ADD_DATA_TWO",
     ADD_DATA_THREE: "ADD_DATA_THREE",
     ADD_DATA: "ADD_DATA",
+    UPDATE_DANCER_ONE_NAME: "UPDATE_DANCER_ONE_NAME",
+    UPDATE_DANCER_TWO_NAME: "UPDATE_DANCER_TWO_NAME",
+    UPDATE_DANCER_THREE_NAME: "UPDATE_DANCER_THREE_NAME",
     // SET_DATA_SUCCESS: "SET_DATA_SUCCESS",
     // SET_DATA_FAILURE: "SET_DATA_FAILURE"
     // UPDATE_LATEST_MOVE: "UPDATE_LATEST_MOVE",
+    START_SYNC: "START_SYNC",
+    END_SYNC: "END_SYNC",
+    TOGGLE_SYNC: "TOGGLE_SYNC"
 };
 
 // ACTIONS
@@ -41,6 +47,39 @@ const initAddData = (data) => {
     };
 };
 
+const initUpdateDancerOneName = (name) => {
+    return { 
+        type: types.UPDATE_DANCER_ONE_NAME,
+        payload: name
+    };
+};
+
+const initUpdateDancerTwoName = (name) => {
+    return { 
+        type: types.UPDATE_DANCER_TWO_NAME,
+        payload: name
+    };
+};
+
+const initUpdateDancerThreeName = (name) => {
+    return { 
+        type: types.UPDATE_DANCER_THREE_NAME,
+        payload: name
+    };
+};
+
+const initToggleSync = () => {
+    return { 
+        type: types.TOGGLE_SYNC,
+    };
+};
+
+const initEndSync = () => {
+    return { 
+        type: types.END_SYNC,
+    };
+};
+
 // const initUpdateLatestMove = (move) => {
 //     // console.log("ACTIONS initAddDataThree");
 //     return { 
@@ -66,6 +105,8 @@ const initAddData = (data) => {
 // REDUCER
 const dataReducer = (
     state = {
+        session: {},
+        metadata: {},
         data: [],
         dancerOne: [],
         dancerTwo: [],
@@ -96,6 +137,60 @@ const dataReducer = (
                 return { 
                     ...state, 
                     data: [...state.data, action.payload]
+                };
+            }
+            case types.UPDATE_DANCER_ONE_NAME: {
+                return { 
+                    ...state, 
+                    metadata: {
+                        ...state.metadata, 
+                        dancerNames: {
+                            ...state.metadata.dancerNames, 
+                            1: action.payload
+                        }
+                    }
+                };
+            }
+            case types.UPDATE_DANCER_TWO_NAME: {
+                return { 
+                    ...state, 
+                    metadata: {
+                        ...state.metadata, 
+                        dancerNames: {
+                            ...state.metadata.dancerNames, 
+                            2: action.payload
+                        }
+                    }
+                };
+            }
+            case types.UPDATE_DANCER_THREE_NAME: {
+                return { 
+                    ...state, 
+                    metadata: {
+                        ...state.metadata, 
+                        dancerNames: {
+                            ...state.metadata.dancerNames, 
+                            3: action.payload
+                        }
+                    }
+                };
+            }
+            case types.TOGGLE_SYNC: {
+                return { 
+                    ...state, 
+                    session: {
+                        ...state.session,
+                        sync: !state.session.sync,
+                    }
+                };
+            }
+            case types.END_SYNC: {
+                return { 
+                    ...state, 
+                    session: {
+                        ...state.session,
+                        sync: false,
+                    }
                 };
             }
             // case types.UPDATE_LATEST_MOVE: {
@@ -160,6 +255,50 @@ export const addData = (data) => {
         //     .get("https://api.github.com/users")
         //     .then(res => dispatch(fetchSuccess(res.data)))
         //     .catch(error => dispatch(fetchFailure(error.message)));
+    };
+};
+
+export const updateDancerOneName = (name) => {
+    return function (dispatch) {
+        dispatch(initUpdateDancerOneName(name));
+        // axios
+        //     .get("https://api.github.com/users")
+        //     .then(res => dispatch(fetchSuccess(res.data)))
+        //     .catch(error => dispatch(fetchFailure(error.message)));
+    };
+};
+
+export const updateDancerTwoName = (name) => {
+    return function (dispatch) {
+        dispatch(initUpdateDancerTwoName(name));
+        // axios
+        //     .get("https://api.github.com/users")
+        //     .then(res => dispatch(fetchSuccess(res.data)))
+        //     .catch(error => dispatch(fetchFailure(error.message)));
+    };
+};
+
+export const updateDancerThreeName = (name) => {
+    return function (dispatch) {
+        dispatch(initUpdateDancerThreeName(name));
+        // axios
+        //     .get("https://api.github.com/users")
+        //     .then(res => dispatch(fetchSuccess(res.data)))
+        //     .catch(error => dispatch(fetchFailure(error.message)));
+    };
+};
+
+export const toggleSync = () => {
+    return function (dispatch) {
+        dispatch(initToggleSync());
+
+    };
+};
+
+export const endSync = () => {
+    return function (dispatch) {
+        dispatch(initEndSync());
+
     };
 };
 
