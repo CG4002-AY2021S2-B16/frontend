@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import socketIOClient from "socket.io-client";
 import styled from 'styled-components';
 
@@ -53,19 +53,28 @@ const PlayCard = () => {
     // const SOCKET_NAMES = ["dancerOne", "dancerTwo", "dancerThree"];
     const SOCKET_NAME = 'predictions';
 
+    const { session } = useSelector(state => state);
+
     const dispatch = useDispatch();
 
-    const openSocket = () => {
-        dispatch(toggleSync());
+    const toggleSocket = (session) => {
         const socket = socketIOClient(API_ENDPOINT);
-        socket.on(SOCKET_NAME, data => {
-            dispatch(addData(data));
-        });
+        // console.log("Socket sync: ", session.sync);
+        if (session.sync) {
+            // console.log("disconnecting");
+            socket.on(SOCKET_NAME, function () {
+                socket.disconnect();
+            });
+        }
+        else {
+            // console.log("connecting");
+            socket.on(SOCKET_NAME, data => {
+                dispatch(addData(data));
+            });
+        }
+        dispatch(toggleSync());
     };
 
-    // const openSocket = () => {
-    //     console.log("clicked");
-    // }
 
     return (
         <Card>
@@ -76,7 +85,7 @@ const PlayCard = () => {
                     alt="play button" 
                     width='60px' 
                     onClick={() => {
-                        openSocket();
+                        toggleSocket(session);
                     }}
                 />
             </PlayStopButton>
