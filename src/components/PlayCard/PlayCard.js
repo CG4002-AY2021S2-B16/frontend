@@ -1,12 +1,14 @@
 import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
 import styled from 'styled-components';
 
-import { addData, startSync, endSync, toggleSync } from "../../store/data";
+import { addData, toggleSync } from "../../store/data";
 
 import colours from '../../colours';
 import play from '../../play.svg';
+import stop from '../../stop.svg';
 
 const Card = styled.div`
     display: grid;
@@ -28,6 +30,9 @@ const PlayStopButton = styled.a`
     grid-area: symbol;
     width: 200px;
     justify-self: center;
+    :hover {
+        cursor: pointer;
+    }
 `
 
 const Img = styled.img`
@@ -35,15 +40,15 @@ const Img = styled.img`
     justify-self: center;
 `
 
-const SaveButton = styled.button`
+const SaveButton = styled.div`
     grid-area: save;
     margin: 5px;
-    padding: 8px 0;
+    padding: 16px 0;
     background-color: ${colours.white};
     border: none;
     border-radius: 8px;
     color: ${colours.darkBlue};
-    font-size: 20px;
+    font-size: 18px;
 `
 
 const PlayCard = () => {
@@ -59,15 +64,12 @@ const PlayCard = () => {
 
     const toggleSocket = (session) => {
         const socket = socketIOClient(API_ENDPOINT);
-        // console.log("Socket sync: ", session.sync);
         if (session.sync) {
-            // console.log("disconnecting");
             socket.on(SOCKET_NAME, function () {
                 socket.disconnect();
             });
         }
         else {
-            // console.log("connecting");
             socket.on(SOCKET_NAME, data => {
                 dispatch(addData(data));
             });
@@ -81,7 +83,7 @@ const PlayCard = () => {
             <PlayStopButton
             >
                 <Img 
-                    src={play} 
+                    src={session.sync ? stop: play} 
                     alt="play button" 
                     width='60px' 
                     onClick={() => {
@@ -89,7 +91,9 @@ const PlayCard = () => {
                     }}
                 />
             </PlayStopButton>
-            <SaveButton>Save Session</SaveButton>
+            <SaveButton>
+                {session.sync ? "Syncing..." : <Link to='/review'>Click to review session</Link>}
+            </SaveButton>
         </Card>
     )
 }

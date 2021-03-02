@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { BrowserRouter, Route, Switch, useHistory } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
 import styled from 'styled-components';
 
 import Dashboard from './Dashboard/Dashboard'
 import { addDataOne, addDataTwo, addDataThree, addData } from "../store/data";
 import Header from './Header/Header';
+import Review from './Review/Review';
+import SideNav from './SideNav/SideNav';
 
 const Window = styled.div`
   text-align: center;
@@ -23,32 +26,18 @@ const API_ENDPOINT = "http://127.0.0.1:3001";
 // const SOCKET_NAMES = ["dancerOne", "dancerTwo", "dancerThree"];
 const SOCKET_NAME = 'predictions';
 
-function App() {
-  // const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   const socket = socketIOClient(API_ENDPOINT);
-  //   // socket.on(SOCKET_NAMES[0], data => {
-  //   //   // setResponseOne(data);
-  //   //   dispatch(addDataOne(data));
-  //   // });
-  //   // socket.on(SOCKET_NAMES[1], data => {
-  //   //   // setResponseTwo(data);
-  //   //   dispatch(addDataTwo(data));
-  //   // });
-  //   // socket.on(SOCKET_NAMES[2], data => {
-  //   //   // setResponseThree(data);
-  //   //   dispatch(addDataThree(data));
-  //   // });
-  //   socket.on(SOCKET_NAME, data => {
-  //     dispatch(addData(data));
-  //   });
-  // }, [dispatch]);
+const App = () => {
 
   return (
     <Window>
       <Header />
-      <Dashboard />
+      <SideNav />
+      <BrowserRouter>
+        <Switch>
+          <Route component={Dashboard} exact={true} path="/" />
+          <Route component={Review} exact={true} path="/review" />
+        </Switch>
+      </BrowserRouter>
     </Window>
   );
 }

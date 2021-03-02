@@ -40,7 +40,7 @@ const BasicLineChart = ({ data }) => {
                     <Label value="move" offset={0} position="bottom" />
                 </XAxis>
                 <YAxis>
-                    <Label value="lag (ms)" offset={0} angle={-90} position="left" dy={-70} />
+                    <Label value="lag (ms)" offset={0} angle={-90} position="left" dy={-40} dx={10} />
                 </YAxis>
                 <Tooltip />
                 <Line key={"lag"} dataKey={"lag"} stroke={colours.darkBlue} />

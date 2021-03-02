@@ -8,8 +8,6 @@ import MoveCard from '../MoveCard/MoveCard';
 import PlayCard from '../PlayCard/PlayCard';
 import PositionCard from '../PositionCard/PositionCard';
 import SessionCard from '../SessionCard/SessionCard';
-// import staticDancerLogs from '../../staticDancerLogs';
-// import staticSensorLogs from '../../dummyLogs';
 
 import colours from '../../colours';
 
@@ -57,7 +55,7 @@ const Positions = styled.div`
     justify-content: start;
 `
 
-const Dashboard = () => {
+const Review = () => {
 
     const { data, metadata } = useSelector(state => state);
 
@@ -84,4 +82,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard;
+export default Review;
