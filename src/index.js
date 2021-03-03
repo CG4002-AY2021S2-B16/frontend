@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, ReactDOM } from 'react-dom';
+import { render } from 'react-dom';
 
 // import configureStore from './configureStore';
 import { Provider } from 'react-redux';
@@ -22,19 +22,6 @@ if (module.hot) {
 }
 
 renderApp()
-
-// ReactDOM.render(
-//   <React.StrictMode>
-//     <Provider store={store}>
-//       <App />
-//     </Provider>
-//   </React.StrictMode>,
-//   document.getElementById('root')
-// );
-
-// if (module.hot) {
-//   module.hot.accept('./components/App', renderApp)
-// }
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

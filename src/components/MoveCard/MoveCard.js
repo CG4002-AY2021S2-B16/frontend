@@ -8,24 +8,22 @@ const Card = styled.div`
     grid-area: current;
     grid-template-areas: 'move  lag';
     grid-template-columns: 2fr 1fr;
-    max-height: 20vh;
-    max-width: 65vh;
-    margin: 5px;
-    margin-left: 70px;
-    padding-left: 10px;
-    padding-right: 10px;
+    min-height: 10vh;
+    max-width: 40vw;
+    margin-left: 10px;
+    padding: 20px;
     border-radius: 8px;
     background: ${colours.darkBlue};
     align-self: center;
     align-items: space-evenly;
 `
 
-const Text = styled.text`
+const Text = styled.div`
     margin: 10px;
-    padding: 20px 0px; 
     color: ${props => props.type === "move" ? colours.white : colours.lightYellow};
     text-align: ${props => props.type === 'move' ? 'left' : 'right'};
     font-size: 55px;
+    line-height: 10vh;
 `
 
 const MoveCard = ({move, lag}) => (

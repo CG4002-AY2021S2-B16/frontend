@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from 'styled-components';
 
@@ -14,16 +14,18 @@ const Card = styled.div`
         'details';
     grid-template-rows: 30px auto;
     grid-gap: 5px;
+    margin: 10px;
+    height: 280px;
 `
 
 const Title = styled.div`
     display: grid;
     grid-area: title;
-    color: ${colours.mediumBlue};
+    color: ${colours.darkGreen};
     text-align: left;
     font-family: "Helvetica";
     font-weight: bold;
-    font-size: 24px;
+    font-size: 22px;
 `
 
 const Details = styled.div`
@@ -33,7 +35,7 @@ const Details = styled.div`
         'session'
         'dancers';
     grid-template-rows: 2fr 3fr;
-    padding: 10px;
+    padding: 20px;
     border-radius: 8px;
     background: ${colours.gray5};
 `
@@ -44,8 +46,11 @@ const Session = styled.div`
     grid-template-areas: 
         'id  '
         'date';
-    grid-template-rows: 1fr 1fr;
+    grid-auto-rows: min-content;
+    grid-gap: 10px;
     color: ${colours.darkBlue};
+    justify-content: start;
+    align-items: center;
 `
 
 const Dancers = styled.div`
@@ -60,14 +65,14 @@ const Dancers = styled.div`
     grid-gap: 10px;
 `
 
-const Text = styled.text`
+const Text = styled.div`
     display: grid;
     grid-area: ${props => props.area};
     color: ${colours.darkBlue};
     text-align: left;
     font-size: 18px;
     white-space: nowrap;
-    align-self: center;
+    font-weight: bold;
 `
 
 const Label = styled.label`
@@ -94,7 +99,16 @@ const Input = styled.input`
 
 const SessionCard = () => {
 
+    const { metadata, session } = useSelector(state => state);
+
     const dispatch = useDispatch();
+
+    // dispatch(getNewSessionId());
+
+    const date = Date().split(' ');
+    date.splice(-5);
+    const currentDate = date.join(' ')
+    // console.log(currentDate);
 
     const updateDancerName = (event) => {
         if (event.target.id === '1') dispatch(updateDancerOneName(event.target.value));
@@ -102,13 +116,21 @@ const SessionCard = () => {
         else dispatch(updateDancerThreeName(event.target.value));
     }
     
+    const getTimeElapsed = (metadata) => {
+        if (metadata["startTime"] && session.sync) { 
+            var secondsElapsed = (Date.now()-metadata["startTime"])/1000;
+            return secondsElapsed;
+        }
+        return 0;
+    }
+
     return (
         <Card>
             <Title>Session Details</Title>
             <Details>
                 <Session>
-                    <Text grid-area="id">#017</Text>
-                    <Text grid-area="date">22 February 2021</Text>
+                    <Text grid-area="id">{currentDate}</Text>
+                    <Text grid-area="date">Time elapsed: {getTimeElapsed(metadata)}s</Text>
                 </Session>
                 <Dancers>
                     <Label area="dancer1Label">Dancer 1</Label>
@@ -120,7 +142,7 @@ const SessionCard = () => {
                         onBlur={(event) => {
                             updateDancerName(event);
                         }}
-                        placeholder="Enter Dancer 1's name"
+                        placeholder={metadata['dancerNames'] ? metadata['dancerNames'][1] : "Enter Dancer 1's name"}
                     />
                     <Input 
                         area="dancer2Input" 
@@ -128,7 +150,7 @@ const SessionCard = () => {
                         onBlur={(event) => {
                             updateDancerName(event);
                         }}
-                        placeholder="Enter Dancer 2's name"
+                        placeholder={metadata['dancerNames'] ? metadata['dancerNames'][2] : "Enter Dancer 2's name"}
                     />
                     <Input 
                         area="dancer3Input" 
@@ -136,10 +158,8 @@ const SessionCard = () => {
                         onBlur={(event) => {
                             updateDancerName(event);
                         }}
-                        placeholder="Enter Dancer 3's name"
+                        placeholder={metadata['dancerNames'] ? metadata['dancerNames'][3] : "Enter Dancer 3's name"}
                     />
-                    {/* <Input area="dancer2Input" />
-                    <Input area="dancer3Input" /> */}
                 </Dancers>
             </Details>
         </Card>

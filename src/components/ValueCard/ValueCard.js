@@ -5,7 +5,7 @@ import colours from '../../colours';
 
 const Card = styled.div`
     display: grid;
-    grid-area: accuracy;
+    grid-area: ${props => props.area};
     grid-template-areas: 
         'value'
         'title';
@@ -14,22 +14,23 @@ const Card = styled.div`
     margin: 10px;
     padding: 20px;
     border-radius: 8px;
-    background: ${props => props.orange === true ? colours.darkOrange : colours.darkBlue};
+    background: ${colours.darkBlue};
     align-content: space-evenly;
 `
 
 const Text = styled.div`
     grid-area: ${props => props.type};
-    margin: 5px;
-    color: ${colours.white};
+    margin: 10px;
+    padding: 0 30px;
+    color: ${props => props.type === "value" ? colours.white : colours.white};
     font-size: ${props => props.type === "value" ? '40px' :'20px'};
 `
 
-const AccuracyCard = ({accuracy}) => (
-    <Card orange={accuracy < 95}>
-        <Text type="value" grid-area="value">{accuracy}%</Text>
-        <Text type="title" grid-area="title">Prediction Accuracy</Text>
+const ValueCard = ({title, value}) => (
+    <Card>
+        <Text type="value" grid-area="value">{value}</Text>
+        <Text type="title" grid-area="title">{title}</Text>
     </Card>
 )
 
-export default AccuracyCard;
+export default ValueCard;

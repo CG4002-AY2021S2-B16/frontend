@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from "react-redux";
 
@@ -16,34 +16,37 @@ import colours from '../../colours';
 const Body = styled.div`
     display: grid;
     grid-area: body;
-    padding: 20px;
+    height: calc(100vh - 100px);
     grid-template-areas: 
         'metadata stream';
     grid-template-columns: 1fr 2fr;
     grid-gap: 10px;
     background: linear-gradient(180deg, ${colours.gray6} -11.15%, rgba(255, 255, 255, 0) 88.85%), ${colours.gray5};
+    align-items: space-evenly;
 `
 
 const Metadata = styled.div`
     display: grid;
-    margin: 5px;
+    margin: 20px;
     grid-area: metadata;
     grid-template-areas:
         'session '
         'playstop'
-        'accuracy';
-    grid-gap: 20px;
+        'accuracy'
+        '.       ';
+    grid-auto-rows: min-content;
 `
 
 const Stream = styled.div`
     display: grid;
-    margin: 5px;
+    margin: 20px;
     grid-area: stream;
     grid-template-areas:
         'positions'
         'current '
-        'graph   ';
-    grid-template-rows: 2fr 2fr 3fr;
+        'graph   '
+        '.       ';
+    grid-auto-rows: min-content;
     grid-gap: 20px;
 `
 
@@ -53,7 +56,6 @@ const Positions = styled.div`
     grid-template-areas: 'dancer1 dancer2 dancer3';
     grid-template-columns: auto;
     grid-gap: 10px;
-    margin-left: 70px;
     justify-content: start;
 `
 

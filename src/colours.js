@@ -22,6 +22,8 @@ const colours = {
     darkRed: '#B80B0B',
     standardRed: '#EA1616',
     lightRed: '#4B78B8',
+    darkGreen: '#1B7895',
+    darkOrange: '#CB562A',
 
     // Standards
     white: '#FFFFFF',

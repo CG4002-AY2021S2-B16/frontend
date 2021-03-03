@@ -1,81 +1,105 @@
-import React, { useEffect, useState } from 'react';
+import { createBrowserHistory } from 'history';
+import React from 'react';
+import { useDispatch, useSelector } from "react-redux";
 import styled from 'styled-components';
-import { useSelector } from "react-redux";
 
-import AccuracyCard from '../AccuracyCard/AccuracyCard';
+import BasicBarChart from '../BasicBarChart/BasicBarChart';
 import BasicLineChart from '../BasicLineChart/BasicLineChart';
-import MoveCard from '../MoveCard/MoveCard';
-import PlayCard from '../PlayCard/PlayCard';
-import PositionCard from '../PositionCard/PositionCard';
+import BasicPieChart from '../BasicPieChart/BasicPieChart';
 import SessionCard from '../SessionCard/SessionCard';
+import ValueCard from '../ValueCard/ValueCard';
+
+import { saveDancerNames } from "../../store/data";
 
 import colours from '../../colours';
 
 const Body = styled.div`
     display: grid;
     grid-area: body;
-    padding: 20px;
+    height: calc(100vh - 100px);
     grid-template-areas: 
-        'metadata stream';
+        'overall stream';
     grid-template-columns: 1fr 2fr;
     grid-gap: 10px;
     background: linear-gradient(180deg, ${colours.gray6} -11.15%, rgba(255, 255, 255, 0) 88.85%), ${colours.gray5};
+    align-items: space-evenly;
 `
 
-const Metadata = styled.div`
+const Overall = styled.div`
     display: grid;
-    margin: 5px;
-    grid-area: metadata;
+    margin: 20px;
+    grid-area: overall;
     grid-template-areas:
         'session '
-        'playstop'
-        'accuracy';
-    grid-gap: 20px;
+        'accuracy'
+        'lag     '
+        'save    ';
+    grid-auto-rows: min-content;
 `
 
 const Stream = styled.div`
     display: grid;
-    margin: 5px;
+    margin: 20px;
     grid-area: stream;
     grid-template-areas:
-        'positions'
-        'current '
-        'graph   ';
-    grid-template-rows: 2fr 2fr 3fr;
+        'movesCount lagPerMove'
+        'graph      graph     '
+        '.          .         ';
+    grid-auto-rows: min-content;
     grid-gap: 20px;
 `
 
-const Positions = styled.div`
-    display: grid;
-    grid-area: positions;
-    grid-template-areas: 'dancer1 dancer2 dancer3';
-    grid-template-columns: auto;
-    grid-gap: 10px;
-    margin-left: 70px;
-    justify-content: start;
+const Button = styled.div`
+    grid-area: save;
+    margin: 5px;
+    padding: 16px 0;
+    background-color: ${colours.darkGreen};
+    border: none;
+    border-radius: 8px;
+    color: ${colours.white};
+    font-size: 18px;
+    :hover {
+        cursor: pointer;
+    }
 `
 
 const Review = () => {
 
-    const { data, metadata } = useSelector(state => state);
+    const { metadata, data } = useSelector(state => state);
 
-    var latestDataPoint = data[data.length-1] ? data[data.length-1] : [0,0,0,0,0,0];
-    var dancerNames = metadata['dancerNames'] ? metadata['dancerNames'] : {1: "Dancer 1", 2: "Dancer 2", 3: "Dancer 3"};
+    const dispatch = useDispatch();
+    const history = createBrowserHistory({
+        forceRefresh: true
+    });
+
+    var accuracies = data ? data.map(item => parseFloat(item[6])) : [];
+    var lags = data ? data.map(item => parseFloat(item[5])) : [];
+
+    const calculateAverage = arr => {
+        return arr.reduce((a,b) => a+b, 0) / arr.length;
+    }
+
+    const saveSession = () => {
+        console.log("save session");
+        dispatch(saveDancerNames(metadata));
+        history.push('/');
+    }
 
     return (
         <Body>
-            <Metadata>
+            <Overall>
                 <SessionCard grid-area="session" />
-                <AccuracyCard accuracy={latestDataPoint[6]}/>
-                <PlayCard />
-            </Metadata>
+                <ValueCard area="accuracy" title={"Average \nprediction accuracy"} value={String(calculateAverage(accuracies)).substring(0,4)+"%"}/>
+                <ValueCard area="lag" title="Average lag" value={String(calculateAverage(lags)*1000).substring(0, 4)+"ms"}/>
+                <Button onClick={() => {
+                    saveSession();
+                }}>
+                    Save Session
+                </Button>
+            </Overall>
             <Stream>
-                <Positions>
-                    <PositionCard area="dancer1" dancer={dancerNames[1]} position={latestDataPoint[1]}/>
-                    <PositionCard area="dancer2" dancer={dancerNames[2]} position={latestDataPoint[2]}/>
-                    <PositionCard area="dancer3" dancer={dancerNames[3]} position={latestDataPoint[3]}/>
-                </Positions>
-                <MoveCard move={latestDataPoint[4]} lag={latestDataPoint[5]*1000}/>
+                <BasicPieChart grid-area="lagPerMove" data={data}/>
+                <BasicBarChart grid-area="movesCount" data={data}/>
                 <BasicLineChart grid-area="graph" data={data}/>
             </Stream>
         </Body>

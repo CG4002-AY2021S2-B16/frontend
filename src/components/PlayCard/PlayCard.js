@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
 import styled from 'styled-components';
 
-import { addData, toggleSync } from "../../store/data";
+import { addData, toggleSync, addStartTime, addEndTime } from "../../store/data";
 
 import colours from '../../colours';
 import play from '../../play.svg';
@@ -19,7 +19,8 @@ const Card = styled.div`
     grid-template-rows: 3fr 2fr;
     grid-gap: 5px;
     max-height: 20vh;
-    padding: 10px;
+    margin: 10px;
+    padding: 20px;
     border-radius: 8px;
     background: ${colours.gray5};
     align-content: space-evenly;
@@ -51,6 +52,15 @@ const SaveButton = styled.div`
     font-size: 18px;
 `
 
+// const A = styled.a`
+//     font-size: 18px;
+//     text-decoration: none;
+//     color: ${colours.darkBlue}
+//     :hover {
+//         cursor: pointer;
+//     }
+// `
+
 const PlayCard = () => {
 
     // CONSTANTS
@@ -65,11 +75,13 @@ const PlayCard = () => {
     const toggleSocket = (session) => {
         const socket = socketIOClient(API_ENDPOINT);
         if (session.sync) {
+            dispatch(addEndTime());
             socket.on(SOCKET_NAME, function () {
                 socket.disconnect();
             });
         }
         else {
+            dispatch(addStartTime());
             socket.on(SOCKET_NAME, data => {
                 dispatch(addData(data));
             });
@@ -77,22 +89,31 @@ const PlayCard = () => {
         dispatch(toggleSync());
     };
 
-
     return (
         <Card>
             <PlayStopButton
             >
-                <Img 
-                    src={session.sync ? stop: play} 
-                    alt="play button" 
-                    width='60px' 
+                <Img
+                    src={session.sync ? stop : play}
+                    alt="play button"
+                    width='60px'
                     onClick={() => {
                         toggleSocket(session);
                     }}
                 />
             </PlayStopButton>
             <SaveButton>
-                {session.sync ? "Syncing..." : <Link to='/review'>Click to review session</Link>}
+                {session.sync ? "Syncing..." : 
+                <Link 
+                    style = {{
+                        textDecoration: 'none',
+                        color: colours.darkBlue,
+                        fontSize: '18px'
+                    }}
+                    to='/review'
+                >
+                    Click to review session
+                </Link>}
             </SaveButton>
         </Card>
     )
