@@ -2,20 +2,23 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from "react-redux";
 
-// import BasicBarChart from '../BasicBarChart/BasicBarChart';
+import BasicBarChart from '../BasicBarChart/BasicBarChart';
 // import BasicLineChart from '../BasicLineChart/BasicLineChart';
 // import BasicPieChart from '../BasicPieChart/BasicPieChart';
 // import SessionCard from '../SessionCard/SessionCard';
+import HistoryTable from '../HistoryTable/HistoryTable';
 import ValueCard from '../ValueCard/ValueCard';
 
 import { getOverallAverageAccuracy, getOverallAverageLag } from "../../store/data";
 
 import colours from '../../colours';
 
+//height: calc(100vh - 100px);
+
 const Body = styled.div`
     display: grid;
     grid-area: body;
-    height: calc(100vh - 100px);
+    height: 100%;
     grid-template-areas: 
         'overall'
         'past   ';
@@ -27,20 +30,73 @@ const Body = styled.div`
 
 const Overall = styled.div`
     display: grid;
-    margin: 20px;
+    margin: 20px 20px 0 20px;
     grid-area: overall;
     grid-template-areas:
-        'overallaccuracy overallchart'
-        'overalllag      overallchart';
+        'values chart';
     grid-template-columns: 1fr 2fr;
-    grid-auto-rows: min-content;
+`
+
+const Values = styled.div`
+    display: grid;
+    grid-area: values;
+    grid-template-areas:
+        'acc'
+        'lag';
+    align-content: stretch;
 `
 
 const Past = styled.div`
     display: grid;
     margin: 20px;
     grid-area: past;
+    justify-content: left;
 `
+
+const Div = styled.div`
+    display: grid;
+    grid-area: chart;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 6px;
+    background: ${colours.darkBlue}
+`
+
+// TODO: Get actual data instead of placeholder data
+const data = [
+    {
+        move: "gun",
+        lag: 1230
+    },
+    {
+        move: "hair",
+        lag: 989
+    },
+    {
+        move: "sidepump",
+        lag: 2000
+    },
+    {
+        move: "dab",
+        lag: 1115
+    },
+    {
+        move: "wipetable",
+        lag: 1894
+    },
+    {
+        move: "elbowkick",
+        lag: 1744
+    },
+    {
+        move: "pointhigh",
+        lag: 2210
+    },
+    {
+        move: "listen",
+        lag: 807
+    },
+]
 
 const History = () => {
 
@@ -62,10 +118,14 @@ const History = () => {
     return (
         <Body>
             <Overall>
-                <ValueCard area="overallaccuracy" title={"Average \nprediction accuracy"} value={String(metadata['overallAverageAccuracy']).substring(0,5)+"%"}/>
-                <ValueCard area="overalllag" title="Average lag" value={String(metadata['overallAverageLag']*1000).substring(0, 4)+"ms"}/>
+                <Values>
+                    <ValueCard area='acc' title={"Average \nprediction accuracy"} value={String(metadata['overallAverageAccuracy']).substring(0,5)+"%"}/>
+                    <ValueCard area='lag' title="Average lag" value={String(metadata['overallAverageLag']*1000).substring(0, 4)+"ms"}/>
+                </Values>
+                <Div><BasicBarChart data={data} component="history"/></Div>
             </Overall>
             <Past>
+                <HistoryTable />
             </Past>
         </Body>
     )

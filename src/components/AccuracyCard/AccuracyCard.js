@@ -13,9 +13,10 @@ const Card = styled.div`
     height: 15vh;
     margin: 10px;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 6px;
     background: ${props => props.orange === true ? colours.darkOrange : colours.darkBlue};
     align-content: space-evenly;
+    font-weight: 300;
 `
 
 const Text = styled.div`
@@ -23,6 +24,7 @@ const Text = styled.div`
     margin: 5px;
     color: ${colours.white};
     font-size: ${props => props.type === "value" ? '40px' :'20px'};
+    text-align: center;
 `
 
 const AccuracyCard = ({accuracy}) => (

@@ -1,8 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from 'styled-components';
 
-import { updateDancerOneName, updateDancerTwoName, updateDancerThreeName } from "../../store/data";
+import { updateDancerOneName, updateDancerTwoName, updateDancerThreeName, getNewSessionId } from "../../store/data";
 
 import colours from '../../colours';
 
@@ -23,9 +23,9 @@ const Title = styled.div`
     grid-area: title;
     color: ${colours.darkGreen};
     text-align: left;
-    font-family: "Helvetica";
-    font-weight: bold;
     font-size: 22px;
+    font-weight: 300;
+    margin-bottom: 20px;
 `
 
 const Details = styled.div`
@@ -36,7 +36,7 @@ const Details = styled.div`
         'dancers';
     grid-template-rows: 2fr 3fr;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 6px;
     background: ${colours.gray5};
 `
 
@@ -72,7 +72,7 @@ const Text = styled.div`
     text-align: left;
     font-size: 18px;
     white-space: nowrap;
-    font-weight: bold;
+    font-weight: 600;
 `
 
 const Label = styled.label`
@@ -92,7 +92,7 @@ const Input = styled.input`
     background-color: ${colours.white};
     color: ${colours.darkBlue};
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     text-align: left;
     font-size: 16px;
 `
@@ -103,7 +103,9 @@ const SessionCard = () => {
 
     const dispatch = useDispatch();
 
-    // dispatch(getNewSessionId());
+    useEffect(() => {
+        dispatch(getNewSessionId());
+    }, [dispatch]);
 
     const date = Date().split(' ');
     date.splice(-5);
@@ -126,11 +128,11 @@ const SessionCard = () => {
 
     return (
         <Card>
-            <Title>Session Details</Title>
+            <Title>Session #{metadata.sessionId} Details</Title>
             <Details>
                 <Session>
                     <Text grid-area="id">{currentDate}</Text>
-                    <Text grid-area="date">Time elapsed: {getTimeElapsed(metadata)}s</Text>
+                    <Text grid-area="date">Time elapsed: {getTimeElapsed(metadata) > 0 ? getTimeElapsed(metadata)+"s" : "Session not started"}</Text>
                 </Session>
                 <Dancers>
                     <Label area="dancer1Label">Dancer 1</Label>

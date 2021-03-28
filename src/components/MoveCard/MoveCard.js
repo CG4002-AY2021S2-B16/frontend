@@ -5,17 +5,18 @@ import colours from '../../colours';
 
 const Card = styled.div`
     display: grid;
-    grid-area: current;
+    grid-area: moves;
     grid-template-areas: 'move  lag';
     grid-template-columns: 2fr 1fr;
     min-height: 10vh;
     max-width: 40vw;
     margin-left: 10px;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 6px;
     background: ${colours.darkBlue};
     align-self: center;
     align-items: space-evenly;
+    font-weight: 300;
 `
 
 const Text = styled.div`

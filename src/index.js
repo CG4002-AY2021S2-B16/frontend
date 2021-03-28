@@ -5,6 +5,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './store';
 
+// import './theme/globalStyle.js';
 import './index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';

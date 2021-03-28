@@ -4,7 +4,7 @@ import {
     // Legend,
     Bar,
     BarChart,
-    // ResponsiveContainer,
+    ResponsiveContainer,
     Tooltip,
     XAxis,
     YAxis,
@@ -17,24 +17,33 @@ import colours from '../../colours';
 const Graph = styled.div`
     grid-area: lagPerMove;
     width: 100%;
+    max-height: 45vh;
     padding: 10px;
 `
 
 const Text = styled.div`
     margin-bottom: 10px;
     font-size: 20px;
-    font-weight: bold;
     text-align: left;
-    color: ${colours.darkGreen}
+    color: ${props => props.component === 'review' ? colours.darkGreen : colours.white};
+    font-weight: ${props => props.component === 'review' ? 300 : 300};
 `
 
-const BasicBarChart = ({ data }) => {
+const tooltipLabelStyle = {
+    color: colours.darkGreen
+}
 
+const tooltipTextStyle = {
+    color: colours.gray3
+}
 
-    const movesAndLags = data.map(item => ({
-        move: item[4],
-        lag: item[5] * 1000
-    }))
+const BasicBarChart = ({ data, component }) => {
+    const movesAndLags = component === "review" ?
+        data.map(item => ({
+            move: item[4],
+            lag: item[5] * 1000
+        }))
+        : data;
 
     const calculateAverage = arr => {
         return arr.reduce((a, b) => a + b, 0) / arr.length;
@@ -61,14 +70,29 @@ const BasicBarChart = ({ data }) => {
 
     return (
         <Graph>
-                <Text>Average Lag per Move</Text>
-                <BarChart width={400} height={320} data={averageLagPerMove} layout="horizontal">
+            <Text component={component}>Average Lag per Move</Text>
+            <ResponsiveContainer width="95%" height="90%">
+                <BarChart
+                    // width={400} 
+                    // height={320} 
+                    margin={{ top: 20 }}
+                    data={averageLagPerMove}
+                    layout="horizontal">
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="move" height={70} interval={0} angle={-30} dy={20} dx={-10} />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="averageLag" fill={colours.mediumBlue} />
+                    <XAxis 
+                        dataKey="move" 
+                        height={70} 
+                        interval={0} 
+                        angle={-30} 
+                        dy={20} 
+                        dx={-10} 
+                        stroke={component === "review" ? colours.gray3 : colours.white} 
+                    />
+                    <YAxis stroke={component === "review" ? colours.gray3 : colours.white}/>
+                    <Tooltip labelStyle={tooltipLabelStyle} itemStyle={tooltipTextStyle}/>
+                    <Bar dataKey="averageLag" fill={component === "review" ? colours.mediumBlue : colours.white} />
                 </BarChart>
+            </ResponsiveContainer>
         </Graph>
     )
 }

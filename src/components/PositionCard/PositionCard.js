@@ -21,31 +21,31 @@ const Title = styled.div`
     grid-area: title;
     color: ${colours.darkGreen};
     text-align: left;
-    font-family: "Helvetica";
-    font-weight: bold;
     font-size: 22px;
+    font-weight: 300;
 `
 
 const Value = styled.div`
     display: grid;
     grid-area: value;
     max-height: 12vh;
-    margin: 5px 0;
+    margin: 0;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 6px;
     background: ${colours.gray4};
     color: ${colours.black};
     text-align: center;
-    font-family: "Courier New";
     font-size: 100px;
+    font-family: 'Courier New';
 `
 
-const PositionCard = ({area, dancer, position}) => {
+const PositionCard = ({area, position, dancer}) => {
 
     return (
         <Card area={area}>
-            {dancer ? (<Title>{dancer}'s<br/> Position</Title>) : (<Title>Dancer {area[area.length-1]}'s Position</Title>)}
-            <Value>{position}</Value>
+            {/* {dancer ? (<Title>{dancer}'s<br/> Position</Title>) : (<Title>Dancer {area[area.length-1]}'s Position</Title>)} */}
+            <Title>In Position {position}:</Title>
+            <Value>{dancer}</Value>
         </Card>
     );
 }

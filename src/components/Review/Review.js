@@ -13,16 +13,17 @@ import { saveDancerNames } from "../../store/data";
 
 import colours from '../../colours';
 
+// calc(100vh - 100px);
 const Body = styled.div`
     display: grid;
     grid-area: body;
-    height: calc(100vh - 100px);
+    height: 100%;
     grid-template-areas: 
         'overall stream';
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 400px 1fr;
     grid-gap: 10px;
     background: linear-gradient(180deg, ${colours.gray6} -11.15%, rgba(255, 255, 255, 0) 88.85%), ${colours.gray5};
-    align-items: space-evenly;
+    align-content: space-evenly;
 `
 
 const Overall = styled.div`
@@ -35,6 +36,7 @@ const Overall = styled.div`
         'lag     '
         'save    ';
     grid-auto-rows: min-content;
+    align-content: start;
 `
 
 const Stream = styled.div`
@@ -43,10 +45,10 @@ const Stream = styled.div`
     grid-area: stream;
     grid-template-areas:
         'movesCount lagPerMove'
-        'graph      graph     '
-        '.          .         ';
+        'graph      graph     ';
     grid-auto-rows: min-content;
     grid-gap: 20px;
+    align-content: space-evenly;
 `
 
 const Button = styled.div`
@@ -55,12 +57,13 @@ const Button = styled.div`
     padding: 16px 0;
     background-color: ${colours.darkGreen};
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     color: ${colours.white};
     font-size: 18px;
     :hover {
         cursor: pointer;
     }
+    text-align: center;
 `
 
 const Review = () => {
@@ -80,7 +83,6 @@ const Review = () => {
     }
 
     const saveSession = () => {
-        console.log("save session");
         dispatch(saveDancerNames(metadata));
         history.push('/');
     }
@@ -99,8 +101,8 @@ const Review = () => {
             </Overall>
             <Stream>
                 <BasicPieChart grid-area="lagPerMove" data={data}/>
-                <BasicBarChart grid-area="movesCount" data={data}/>
-                <BasicLineChart grid-area="graph" data={data}/>
+                <BasicBarChart grid-area='movesCount' data={data} component='review'/>
+                <BasicLineChart area='graph' data={data}/>
             </Stream>
         </Body>
     )

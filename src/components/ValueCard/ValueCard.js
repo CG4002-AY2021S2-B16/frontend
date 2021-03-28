@@ -10,12 +10,15 @@ const Card = styled.div`
         'value'
         'title';
     grid-template-rows: 3fr 2fr;
-    height: 15vh;
+    min-height: 14vh;
     margin: 10px;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 6px;
     background: ${colours.darkBlue};
     align-content: space-evenly;
+    text-align: center;
+    align-self: space-evenly;
+    font-weight: 300;
 `
 
 const Text = styled.div`
@@ -24,6 +27,7 @@ const Text = styled.div`
     padding: 0 30px;
     color: ${props => props.type === "value" ? colours.white : colours.white};
     font-size: ${props => props.type === "value" ? '40px' :'20px'};
+    font-weight: 300;
 `
 
 const ValueCard = ({title, value}) => (

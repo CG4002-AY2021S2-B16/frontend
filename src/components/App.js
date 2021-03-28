@@ -8,20 +8,25 @@ import History from './History/History';
 import Review from './Review/Review';
 import SideNav from './SideNav/SideNav';
 
+import '../index.css';
+import GlobalFonts from '../fonts/fonts';
+
 const Window = styled.div`
-  text-align: center;
   display: grid;
   grid-template-areas: 
     'header  header'
     'sidenav body  ';
   grid-template-columns: 200px 1fr;
-  grid-template-rows: 100px 1fr;
+  grid-template-rows: 80px 1fr;
+  height: 100vh;
+  font-family: Inter;
 `
 
 const App = () => {
 
   return (
     <Window>
+      <GlobalFonts />
       <Header />
       <BrowserRouter>
       <SideNav />

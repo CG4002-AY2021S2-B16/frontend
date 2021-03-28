@@ -8,14 +8,13 @@ const types = {
     ADD_DATA_TWO: "ADD_DATA_TWO",
     ADD_DATA_THREE: "ADD_DATA_THREE",
     ADD_DATA: "ADD_DATA",
+    ADD_SENSOR_DATA_ONE: "ADD_SENSOR_DATA_ONE",
+    ADD_SENSOR_DATA_TWO: "ADD_SENSOR_DATA_TWO",
+    ADD_SENSOR_DATA_THREE: "ADD_SENSOR_DATA_THREE",
+    ADD_EMG_DATA: "ADD_EMG_DATA",
     UPDATE_DANCER_ONE_NAME: "UPDATE_DANCER_ONE_NAME",
     UPDATE_DANCER_TWO_NAME: "UPDATE_DANCER_TWO_NAME",
     UPDATE_DANCER_THREE_NAME: "UPDATE_DANCER_THREE_NAME",
-    // SET_DATA_SUCCESS: "SET_DATA_SUCCESS",
-    // SET_DATA_FAILURE: "SET_DATA_FAILURE"
-    // UPDATE_LATEST_MOVE: "UPDATE_LATEST_MOVE",
-    // START_SYNC: "START_SYNC",
-    // END_SYNC: "END_SYNC",
     TOGGLE_SYNC: "TOGGLE_SYNC",
     ADD_START_TIME: "ADD_START_TIME",
     ADD_END_TIME: "ADD_END_TIME",
@@ -31,6 +30,11 @@ const types = {
     SAVE_DANCER_NAMES: "SAVE_DANCER_NAMES",
     SAVE_DANCER_NAMES_SUCCESS: "SAVE_DANCER_NAMES_SUCCESS",
     SAVE_DANCER_NAMES_FAILURE: "SAVE_DANCER_NAMES_FAILURE",
+    GET_PAST_DANCER_NAMES: "GET_PAST_DANCER_NAMES",
+    GET_PAST_DANCER_NAMES_SUCCESS: "GET_PAST_DANCER_NAMES_SUCCESS",
+    GET_PAST_DANCER_NAMES_FAILURE: "GET_PAST_DANCER_NAMES_FAILURE",
+    TOGGLE_DATA_VIEW: "TOGGLE_DATA_VIEW",
+
 };
 
 // ACTIONS
@@ -56,8 +60,41 @@ const initAddDataThree = (data) => {
 };
 
 const initAddData = (data) => {
+    // console.log("Adding prediction to store: ", data);
     return { 
         type: types.ADD_DATA,
+        payload: data
+    };
+};
+
+const initAddSensorDataOne = (sensorData) => {
+    // console.log("initAddSensorDataOne");
+    return { 
+        type: types.ADD_SENSOR_DATA_ONE,
+        payload: sensorData,
+    };
+};
+
+const initAddSensorDataTwo = (sensorData) => {
+    // console.log("initAddSensorDataTwo");
+    return { 
+        type: types.ADD_SENSOR_DATA_TWO,
+        payload: sensorData,
+    };
+};
+
+const initAddSensorDataThree = (sensorData) => {
+    // console.log("initAddSensorDataThree");
+    return { 
+        type: types.ADD_SENSOR_DATA_THREE,
+        payload: sensorData,
+    };
+};
+
+const initAddEMGData = (data) => {
+    // console.log("initAddEMGData");
+    return { 
+        type: types.ADD_EMG_DATA,
         payload: data
     };
 };
@@ -176,38 +213,48 @@ const saveDancerNamesFailure = () => {
     };
 };
 
-// const initUpdateLatestMove = (move) => {
-//     // console.log("ACTIONS initAddDataThree");
-//     return { 
-//         type: types.UPDATE_LATEST_MOVE,
-//         payload: move
-//     };
-// };
+const initGetPastDancerNames = () => {
+    return { 
+        type: types.GET_PAST_DANCER_NAMES,
+    };
+};
 
-// const addDataSuccess = repos => {
-//     return {
-//         type: types.ADD_DATA_SUCCESS,
-//         repos
-//     };
-// };
+const getPastDancerNamesSuccess = (response) => {
+    return { 
+        type: types.GET_PAST_DANCER_NAMES_SUCCESS,
+        payload: response,
+    };
+};
 
-// const addDataFailure = message => {
-//     return {
-//         type: types.ADD_DATA_FAILURE,
-//         message
-//     };
-// };
+const getPastDancerNamesFailure = () => {
+    return { 
+        type: types.GET_PAST_DANCER_NAMES_FAILURE,
+    };
+};
+const initToggleDataView = () => {
+    return { 
+        type: types.TOGGLE_DATA_VIEW,
+    };
+};
 
 // REDUCER
 const dataReducer = (
     state = {
-        session: {},
+        session: {
+            viewPredictionData: false,
+        },
         metadata: {},
         data: [],
-        dancerOne: [],
-        dancerTwo: [],
-        dancerThree:[],
-        // latestMove: '',
+        sensorData: {
+            1: [],
+            2: [],
+            3: []
+        },
+        EMGData: [],
+        // dancerOne: [],
+        // dancerTwo: [],
+        // dancerThree:[],
+        history: [],
     } , 
     action) => {
         switch (action.type) {
@@ -233,6 +280,48 @@ const dataReducer = (
                 return { 
                     ...state, 
                     data: [...state.data, action.payload]
+                };
+            }
+            case types.ADD_SENSOR_DATA_ONE: {
+                return { 
+                    ...state, 
+                    sensorData: {
+                        ...state.sensorData, 
+                        1: [
+                            ...state.sensorData[1],
+                            action.payload,
+                        ]
+                    }
+                };
+            }
+            case types.ADD_SENSOR_DATA_TWO: {
+                return { 
+                    ...state, 
+                    sensorData: {
+                        ...state.sensorData, 
+                        2: [
+                            ...state.sensorData[2],
+                            action.payload,
+                        ]
+                    }
+                };
+            }
+            case types.ADD_SENSOR_DATA_THREE: {
+                return { 
+                    ...state, 
+                    sensorData: {
+                        ...state.sensorData, 
+                        3: [
+                            ...state.sensorData[3],
+                            action.payload,
+                        ]
+                    }
+                };
+            }
+            case types.ADD_EMG_DATA: {
+                return { 
+                    ...state, 
+                    EMGData: [...state.EMGData, action.payload]
                 };
             }
             case types.UPDATE_DANCER_ONE_NAME: {
@@ -281,7 +370,6 @@ const dataReducer = (
                 };
             }
             case types.ADD_START_TIME: {
-                // console.log("Start: ", Date.now())
                 return { 
                     ...state, 
                     metadata: {
@@ -291,7 +379,6 @@ const dataReducer = (
                 };
             }
             case types.ADD_END_TIME: {
-                // console.log("End: ", Date.now())
                 return { 
                     ...state, 
                     metadata: {
@@ -319,7 +406,6 @@ const dataReducer = (
                 return state;
             }
             case types.GET_AVERAGE_ACCURACY_SUCCESS: {
-                console.log("overallAverageAccuracy: ", action.payload)
                 return { 
                     ...state, 
                     metadata: {
@@ -335,7 +421,6 @@ const dataReducer = (
                 return state;
             }
             case types.GET_AVERAGE_LAG_SUCCESS: {
-                console.log("overallAverageLag: ", action.payload)
                 return { 
                     ...state, 
                     metadata: {
@@ -355,6 +440,28 @@ const dataReducer = (
             }
             case types.SAVE_DANCER_NAMES_FAILURE: {
                 return state;
+            }
+            case types.GET_PAST_DANCER_NAMES: {
+                return state;
+            }
+            case types.GET_PAST_DANCER_NAMES_SUCCESS: {
+                return {
+                    ...state,
+                    history: action.payload,
+                };
+            }
+            case types.GET_PAST_DANCER_NAMES_FAILURE: {
+                return state;
+            }
+            case types.TOGGLE_DATA_VIEW: {
+                console.log("TOGGLE_DATA_VIEW - dataView: ", state.session.dataView)
+                return { 
+                    ...state, 
+                    session: {
+                        ...state.session,
+                        dataView: !state.session.dataView
+                    }
+                };
             }
             default:
                 return state;
@@ -382,6 +489,29 @@ export const addDataThree = (data) => {
 export const addData = (data) => {
     return function (dispatch) {
         dispatch(initAddData(data));
+    };
+};
+
+export const addSensorData = (data) => {
+    const sensorData = data.slice(0,7);
+    // console.log("addSensorData: ", sensorData);
+    return function (dispatch) {
+        if (data[7] === "1") {
+            dispatch(initAddSensorDataOne(sensorData));
+        }
+        if (data[7] === "2") {
+            dispatch(initAddSensorDataTwo(sensorData));
+        }
+        if (data[7] === "3") {
+            dispatch(initAddSensorDataThree(sensorData));
+        }
+
+    }
+};
+
+export const addEMGData = (data) => {
+    return function (dispatch) {
+        dispatch(initAddEMGData(data));
     };
 };
 
@@ -458,18 +588,37 @@ export const saveDancerNames = (metadata) => {
     return function (dispatch) {
         dispatch(getNewSessionId);
         dispatch(initSaveDancerNames());
+
         axios
             .post(
                 "http://localhost:3001/savedancernames",
-                {
-                    "dancer1": metadata.dancerNames[1],
-                    "dancer2": metadata.dancerNames[2],
-                    "dancer3": metadata.dancerNames[3],
+                null,
+                { params: {
+                    "dancer1": metadata.dancerNames && metadata.dancerNames[1] ? metadata.dancerNames[1] : "Dancer 1",
+                    "dancer2": metadata.dancerNames && metadata.dancerNames[2] ? metadata.dancerNames[2] : "Dancer 2",
+                    "dancer3": metadata.dancerNames && metadata.dancerNames[3] ? metadata.dancerNames[3] : "Dancer 3",
                     "id": metadata.sessionId
-                }
+                }}
             )
             .then(res => dispatch(saveDancerNamesSuccess(res.data['response'])))
             .catch(error => dispatch(saveDancerNamesFailure(error.message)));
+    };
+};
+
+export const getPastDancerNames = () => {
+    return function (dispatch) {
+        dispatch(initGetPastDancerNames());
+        axios
+            .get("http://localhost:3001/pastdancernames")
+            .then(res => dispatch(getPastDancerNamesSuccess(res.data['response'])))
+            .catch(error => dispatch(getPastDancerNamesFailure(error.message)));
+    };
+};
+
+export const toggleDataView = () => {
+    return function (dispatch) {
+        dispatch(initToggleDataView());
+
     };
 };
 

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
 import styled from 'styled-components';
 
-import { addData, toggleSync, addStartTime, addEndTime } from "../../store/data";
+import { addData, addSensorData, addEMGData, toggleSync, addStartTime, addEndTime } from "../../store/data";
 
 import colours from '../../colours';
 import play from '../../play.svg';
@@ -21,9 +21,10 @@ const Card = styled.div`
     max-height: 20vh;
     margin: 10px;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 6px;
     background: ${colours.gray5};
     align-content: space-evenly;
+    font-weight: 300;
 `
 
 const PlayStopButton = styled.a`
@@ -47,9 +48,10 @@ const SaveButton = styled.div`
     padding: 16px 0;
     background-color: ${colours.white};
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     color: ${colours.darkBlue};
     font-size: 18px;
+    text-align: center;
 `
 
 // const A = styled.a`
@@ -65,8 +67,9 @@ const PlayCard = () => {
 
     // CONSTANTS
     const API_ENDPOINT = "http://127.0.0.1:3001";
-    // const SOCKET_NAMES = ["dancerOne", "dancerTwo", "dancerThree"];
-    const SOCKET_NAME = 'predictions';
+    const SOCKET_NAME_PREDICTIONS = 'predictions';
+    const SOCKET_NAME_SENSOR_DATA = 'sensor';
+    const SOCKET_NAME_EMG_DATA = 'emg';
 
     const { session } = useSelector(state => state);
 
@@ -76,14 +79,27 @@ const PlayCard = () => {
         const socket = socketIOClient(API_ENDPOINT);
         if (session.sync) {
             dispatch(addEndTime());
-            socket.on(SOCKET_NAME, function () {
+            console.log("disconnecting", socket.disconnect());
+            socket.on(SOCKET_NAME_PREDICTIONS, function () {
+                socket.disconnect();
+            });
+            socket.on(SOCKET_NAME_SENSOR_DATA, function () {
                 socket.disconnect();
             });
         }
         else {
             dispatch(addStartTime());
-            socket.on(SOCKET_NAME, data => {
+            socket.on(SOCKET_NAME_PREDICTIONS, data => {
+                console.log("Received prediction: ", data);
                 dispatch(addData(data));
+            });
+            socket.on(SOCKET_NAME_SENSOR_DATA, data => {
+                // console.log("Received sensor data: ", data);
+                dispatch(addSensorData(data));
+            });
+            socket.on(SOCKET_NAME_EMG_DATA, data => {
+                // console.log("Received emg data: ", data);
+                dispatch(addEMGData(data));
             });
         }
         dispatch(toggleSync());
@@ -91,8 +107,7 @@ const PlayCard = () => {
 
     return (
         <Card>
-            <PlayStopButton
-            >
+            <PlayStopButton>
                 <Img
                     src={session.sync ? stop : play}
                     alt="play button"

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import colours from '../../colours';
-import logo from '../../streamteam_header.png';
+import logo from '../../streamteam_header80.png';
 import icon from '../../profile.png';
 
 const Head = styled.div`
@@ -28,7 +28,6 @@ const User = styled.div`
     grid-template-areas: 'name icon';
     grid-template-columns: 3fr 1fr;
     height: 100%;
-    margin: 10px;
 `
 
 const Name = styled.div`
@@ -51,7 +50,7 @@ const Header = () => (
     <Head>
         <Logo src={logo} alt="logo" />
         <User>
-            <Name>Hey Jessie!</Name>
+            <Name>Hey B16!</Name>
             <UserLogo src={icon} alt="user icon"/>
         </User>
     </Head>
