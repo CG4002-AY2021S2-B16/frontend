@@ -30,9 +30,9 @@ const types = {
     SAVE_DANCER_NAMES: "SAVE_DANCER_NAMES",
     SAVE_DANCER_NAMES_SUCCESS: "SAVE_DANCER_NAMES_SUCCESS",
     SAVE_DANCER_NAMES_FAILURE: "SAVE_DANCER_NAMES_FAILURE",
-    GET_PAST_DANCER_NAMES: "GET_PAST_DANCER_NAMES",
-    GET_PAST_DANCER_NAMES_SUCCESS: "GET_PAST_DANCER_NAMES_SUCCESS",
-    GET_PAST_DANCER_NAMES_FAILURE: "GET_PAST_DANCER_NAMES_FAILURE",
+    GET_PAST_SESSIONS: "GET_PAST_SESSIONS",
+    GET_PAST_SESSIONS_SUCCESS: "GET_PAST_SESSIONS_SUCCESS",
+    GET_PAST_SESSIONS_FAILURE: "GET_PAST_SESSIONS_FAILURE",
     TOGGLE_DATA_VIEW: "TOGGLE_DATA_VIEW",
 
 };
@@ -213,22 +213,22 @@ const saveDancerNamesFailure = () => {
     };
 };
 
-const initGetPastDancerNames = () => {
+const initGetPastSessions = () => {
     return { 
-        type: types.GET_PAST_DANCER_NAMES,
+        type: types.GET_PAST_SESSIONS,
     };
 };
 
-const getPastDancerNamesSuccess = (response) => {
+const getPastSessionsSuccess = (response) => {
     return { 
-        type: types.GET_PAST_DANCER_NAMES_SUCCESS,
+        type: types.GET_PAST_SESSIONS_SUCCESS,
         payload: response,
     };
 };
 
-const getPastDancerNamesFailure = () => {
+const getPastSessionsFailure = () => {
     return { 
-        type: types.GET_PAST_DANCER_NAMES_FAILURE,
+        type: types.GET_PAST_SESSIONS_FAILURE,
     };
 };
 const initToggleDataView = () => {
@@ -605,13 +605,13 @@ export const saveDancerNames = (metadata) => {
     };
 };
 
-export const getPastDancerNames = () => {
+export const getPastSessions = () => {
     return function (dispatch) {
-        dispatch(initGetPastDancerNames());
+        dispatch(initGetPastSessions());
         axios
-            .get("http://localhost:3001/pastdancernames")
-            .then(res => dispatch(getPastDancerNamesSuccess(res.data['response'])))
-            .catch(error => dispatch(getPastDancerNamesFailure(error.message)));
+            .get("http://localhost:3001/pastsessions")
+            .then(res => dispatch(getPastSessionsSuccess(res.data['response'])))
+            .catch(error => dispatch(getPastSessionsFailure(error.message)));
     };
 };
 

@@ -13,7 +13,7 @@ const Card = styled.div`
     grid-gap: 5px;
     margin-top: 10px;
     margin-left: 10px;
-    min-width: 12vw;
+    min-width: 10vw;
 `
 
 const Title = styled.div`
@@ -44,8 +44,8 @@ const PositionCard = ({area, position, dancer}) => {
     return (
         <Card area={area}>
             {/* {dancer ? (<Title>{dancer}'s<br/> Position</Title>) : (<Title>Dancer {area[area.length-1]}'s Position</Title>)} */}
-            <Title>In Position {position}:</Title>
-            <Value>{dancer}</Value>
+            <Title>In Position {area[area.length - 1]}:</Title>
+            <Value>{position}</Value>
         </Card>
     );
 }

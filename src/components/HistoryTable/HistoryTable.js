@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from "react-redux";
 
-import { getPastDancerNames } from "../../store/data";
+import { getPastSessions } from "../../store/data";
 
 import colours from '../../colours';
 
@@ -97,7 +97,7 @@ const HistoryTable = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getPastDancerNames());
+        dispatch(getPastSessions());
     }, [dispatch]);
 
     const graphData = history ? history : [];

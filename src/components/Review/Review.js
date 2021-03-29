@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from 'styled-components';
 
 import BasicBarChart from '../BasicBarChart/BasicBarChart';
-import BasicLineChart from '../BasicLineChart/BasicLineChart';
 import BasicPieChart from '../BasicPieChart/BasicPieChart';
 import SessionCard from '../SessionCard/SessionCard';
+import SessionTable from '../SessionTable/SessionTable';
 import ValueCard from '../ValueCard/ValueCard';
 
 import { saveDancerNames } from "../../store/data";
@@ -102,7 +102,7 @@ const Review = () => {
             <Stream>
                 <BasicPieChart grid-area="lagPerMove" data={data}/>
                 <BasicBarChart grid-area='movesCount' data={data} component='review'/>
-                <BasicLineChart area='graph' data={data}/>
+                <SessionTable />
             </Stream>
         </Body>
     )

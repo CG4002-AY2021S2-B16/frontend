@@ -90,7 +90,7 @@ const PlayCard = () => {
         else {
             dispatch(addStartTime());
             socket.on(SOCKET_NAME_PREDICTIONS, data => {
-                console.log("Received prediction: ", data);
+                // console.log("Received prediction: ", data);
                 dispatch(addData(data));
             });
             socket.on(SOCKET_NAME_SENSOR_DATA, data => {
