@@ -125,7 +125,7 @@ const PlayCard = () => {
                         color: colours.darkBlue,
                         fontSize: '18px'
                     }}
-                    to='/review'
+                    to='/review/current'
                 >
                     Click to review session
                 </Link>}

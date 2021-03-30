@@ -33,6 +33,9 @@ const types = {
     GET_PAST_SESSIONS: "GET_PAST_SESSIONS",
     GET_PAST_SESSIONS_SUCCESS: "GET_PAST_SESSIONS_SUCCESS",
     GET_PAST_SESSIONS_FAILURE: "GET_PAST_SESSIONS_FAILURE",
+    GET_PAST_SESSION: "GET_PAST_SESSION",
+    GET_PAST_SESSION_SUCCESS: "GET_PAST_SESSION_SUCCESS",
+    GET_PAST_SESSION_FAILURE: "GET_PAST_SESSION_FAILURE",
     TOGGLE_DATA_VIEW: "TOGGLE_DATA_VIEW",
 
 };
@@ -231,6 +234,24 @@ const getPastSessionsFailure = () => {
         type: types.GET_PAST_SESSIONS_FAILURE,
     };
 };
+const initGetPastSession = () => {
+    return { 
+        type: types.GET_PAST_SESSION,
+    };
+};
+
+const getPastSessionSuccess = (response) => {
+    return { 
+        type: types.GET_PAST_SESSION_SUCCESS,
+        payload: response,
+    };
+};
+
+const getPastSessionFailure = () => {
+    return { 
+        type: types.GET_PAST_SESSION_FAILURE,
+    };
+};
 const initToggleDataView = () => {
     return { 
         type: types.TOGGLE_DATA_VIEW,
@@ -255,6 +276,7 @@ const dataReducer = (
         // dancerTwo: [],
         // dancerThree:[],
         history: [],
+        specificHistory: [],
     } , 
     action) => {
         switch (action.type) {
@@ -441,16 +463,28 @@ const dataReducer = (
             case types.SAVE_DANCER_NAMES_FAILURE: {
                 return state;
             }
-            case types.GET_PAST_DANCER_NAMES: {
+            case types.GET_PAST_SESSIONS: {
                 return state;
             }
-            case types.GET_PAST_DANCER_NAMES_SUCCESS: {
+            case types.GET_PAST_SESSIONS_SUCCESS: {
                 return {
                     ...state,
                     history: action.payload,
                 };
             }
-            case types.GET_PAST_DANCER_NAMES_FAILURE: {
+            case types.GET_PAST_SESSIONS_FAILURE: {
+                return state;
+            }
+            case types.GET_PAST_SESSION: {
+                return state;
+            }
+            case types.GET_PAST_SESSION_SUCCESS: {
+                return {
+                    ...state,
+                    specificHistory: action.payload,
+                };
+            }
+            case types.GET_PAST_SESSION_FAILURE: {
                 return state;
             }
             case types.TOGGLE_DATA_VIEW: {
@@ -612,6 +646,21 @@ export const getPastSessions = () => {
             .get("http://localhost:3001/pastsessions")
             .then(res => dispatch(getPastSessionsSuccess(res.data['response'])))
             .catch(error => dispatch(getPastSessionsFailure(error.message)));
+    };
+};
+
+export const getPastSession = (sessionId) => {
+    return function (dispatch) {
+        dispatch(initGetPastSession());
+        axios
+        .get(
+            "http://localhost:3001/pastsession",
+            { params: {
+                "id": sessionId,
+            }}
+        )
+            .then(res => dispatch(getPastSessionSuccess(res.data['response'])))
+            .catch(error => dispatch(getPastSessionFailure(error.message)));
     };
 };
 

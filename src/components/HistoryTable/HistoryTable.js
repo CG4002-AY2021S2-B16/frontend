@@ -32,7 +32,7 @@ const TableDiv = styled.div`
     grid-area: table;
     margin: 10px 0;
     padding: 10px;
-    height: 30vh;
+    height: 37vh;
     width: 1fr;
     background-color: ${colours.gray5};
     border-radius: 6px;
@@ -110,7 +110,6 @@ const HistoryTable = () => {
         }
         else {
             var session = {
-                // "sessionid": id,
                 "time": item["time"],
                 "date": item["date"],
             }
@@ -119,11 +118,6 @@ const HistoryTable = () => {
         }
     });
 
-    // console.log("items: ", items);
-    // const entries = Object.entries(items);
-    // console.log("entries: ", entries);
-
-    
     return (
     <HistoryTableDiv>
         <Title>Past Sessions</Title>
@@ -150,7 +144,7 @@ const HistoryTable = () => {
                         <Td>{item[1]["date"]}</Td>
                         <Td>{item[1]["time"]}</Td>
                         <Td>{dancerOneName + ", " + dancerTwoName + ", " + dancerThreeName}</Td>
-                        <Td><A href='/'>View Details >>></A></Td>
+                        <Td><A href={'/review/'+item[0]}>View Details >>></A></Td>
                     </Tr>
                 )})}
             </Table>}

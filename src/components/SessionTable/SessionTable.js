@@ -31,7 +31,7 @@ const TableDiv = styled.div`
     grid-area: table;
     margin: 10px 0;
     padding: 10px;
-    height: 30vh;
+    height: 37vh;
     width: 1fr;
     background-color: ${colours.gray5};
     border-radius: 6px;
@@ -76,12 +76,6 @@ const Td = styled.td`
     background-color: ${colours.gray6}
 `
 
-const A = styled.a`
-    font-size: 16px;
-    text-decoration: none;
-    color: ${colours.darkBlue}
-`
-
 const Text = styled.div`
     font-size: 20px;
     text-decoration: none;
@@ -89,13 +83,18 @@ const Text = styled.div`
     align-self: centre;
 `
 
-const SessionTable = () => {
+const SessionTable = (sessionId) => {
 
-    const { data } = useSelector(state => state);
+    const { data, specificHistory } = useSelector(state => state);
 
-    const tableData = data ? data : [];
+    var tableData;
 
-    console.log("tableData: ", data)
+    if (sessionId === "current") {
+        tableData = data ? data : [];
+    }
+    else {
+        tableData = specificHistory.moves ? specificHistory.moves : [];
+    }
     
     return (
     <SessionTableDiv>
@@ -111,7 +110,6 @@ const SessionTable = () => {
                     <Th>Accuracy</Th>
                 </Tr>
                 {tableData.map(item => {
-
                     return (
                     <Tr>
                         <Td>{item[4]}</Td>

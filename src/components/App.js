@@ -32,7 +32,7 @@ const App = () => {
       <SideNav />
         <Switch>
           <Route component={Dashboard} exact={true} path="/" />
-          <Route component={Review} exact={true} path="/review" />
+          <Route component={Review} path="/review/:id" />
           <Route component={History} exact={true} path="/history" />
         </Switch>
       </BrowserRouter>

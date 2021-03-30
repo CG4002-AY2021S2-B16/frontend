@@ -1,5 +1,5 @@
 import { createBrowserHistory } from 'history';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import styled from 'styled-components';
 
@@ -9,7 +9,7 @@ import SessionCard from '../SessionCard/SessionCard';
 import SessionTable from '../SessionTable/SessionTable';
 import ValueCard from '../ValueCard/ValueCard';
 
-import { saveDancerNames } from "../../store/data";
+import { getPastSession, saveDancerNames } from "../../store/data";
 
 import colours from '../../colours';
 
@@ -66,20 +66,35 @@ const Button = styled.div`
     text-align: center;
 `
 
-const Review = () => {
+const Review = (props) => {
 
-    const { metadata, data } = useSelector(state => state);
+    const { metadata, data, specificHistory } = useSelector(state => state);
 
     const dispatch = useDispatch();
     const history = createBrowserHistory({
         forceRefresh: true
     });
 
-    var accuracies = data ? data.map(item => parseFloat(item[6])) : [];
-    var lags = data ? data.map(item => parseFloat(item[5])) : [];
+    const sessionId = props.match.params.id;
+    const accuracies = data ? data.map(item => parseFloat(item[6])) : [];
+    const lags = data ? data.map(item => parseFloat(item[5])) : [];
+    var chartData = [];
+
+    useEffect(() => {
+        if (sessionId !== 'current') {
+            dispatch(getPastSession(sessionId))
+        }
+    }, [dispatch, sessionId]);
+
+    if (sessionId === 'current') {
+        chartData = data ? data : [];
+    }
+    else {
+        chartData = specificHistory.moves ? specificHistory.moves : [];
+    }
 
     const calculateAverage = arr => {
-        return arr.reduce((a,b) => a+b, 0) / arr.length;
+        return arr.reduce((a, b) => a + b, 0) / arr.length;
     }
 
     const saveSession = () => {
@@ -91,8 +106,20 @@ const Review = () => {
         <Body>
             <Overall>
                 <SessionCard grid-area="session" />
-                <ValueCard area="accuracy" title={"Average \nprediction accuracy"} value={String(calculateAverage(accuracies)).substring(0,4)+"%"}/>
-                <ValueCard area="lag" title="Average lag" value={String(calculateAverage(lags)*1000).substring(0, 4)+"ms"}/>
+                <ValueCard
+                    area="accuracy"
+                    title={"Average \nprediction accuracy"}
+                    value={sessionId === 'current' ?
+                        String(calculateAverage(accuracies)).substring(0, 4) + "%"
+                        : String(specificHistory["accuracy"]).substring(0, 4) + "%"}
+                />
+                <ValueCard
+                    area="lag"
+                    title="Average lag"
+                    value={sessionId === 'current' ?
+                        String(calculateAverage(lags) * 1000).substring(0, 4) + "ms"
+                        : String(specificHistory["lag"]).substring(0, 4) + "ms"}
+                />
                 <Button onClick={() => {
                     saveSession();
                 }}>
@@ -100,9 +127,9 @@ const Review = () => {
                 </Button>
             </Overall>
             <Stream>
-                <BasicPieChart grid-area="lagPerMove" data={data}/>
-                <BasicBarChart grid-area='movesCount' data={data} component='review'/>
-                <SessionTable />
+                <BasicPieChart grid-area="lagPerMove" data={chartData} />
+                <BasicBarChart grid-area='movesCount' data={chartData} component='review' />
+                <SessionTable session={sessionId} />
             </Stream>
         </Body>
     )

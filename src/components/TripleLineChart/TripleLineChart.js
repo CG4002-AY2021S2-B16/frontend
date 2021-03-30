@@ -43,7 +43,8 @@ const TripleLineChart = ({ area, title, type }) => {
     //     console.log(sensorData)
     // }, [sensorData]);
 
-    const graphData = sensorData ? sensorData : [];
+    var graphData = sensorData ? sensorData : [];
+    // var graphData = data.slice(-100);
 
     const typeMap = {
         "timestamp": 0,

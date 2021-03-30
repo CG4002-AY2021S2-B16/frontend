@@ -58,7 +58,6 @@ const BasicPieChart = ({ data }) => {
                     }}
                 >
                     <Tooltip />
-                    {/* <Pie data={moveCounts} dataKey="count" nameKey="move" innerRadius={60} outerRadius={80} fill={colours.dullBlue} label/> */}
                     <Pie
                         data={moveCounts}
                         innerRadius={60}
