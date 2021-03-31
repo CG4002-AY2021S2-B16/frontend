@@ -9,7 +9,7 @@ import SessionCard from '../SessionCard/SessionCard';
 import SessionTable from '../SessionTable/SessionTable';
 import ValueCard from '../ValueCard/ValueCard';
 
-import { getPastSession, saveDancerNames } from "../../store/data";
+import { getPastSession, saveDancerNames, savePoint } from "../../store/data";
 
 import colours from '../../colours';
 
@@ -98,8 +98,16 @@ const Review = (props) => {
     }
 
     const saveSession = () => {
-        dispatch(saveDancerNames(metadata));
-        history.push('/');
+        const id = sessionId === 'current' ? metadata.sessionId : sessionId;
+        dispatch(saveDancerNames(metadata, id));
+        var i;
+        if (sessionId === 'current') {
+            for (i=0; i<chartData.length; i++) {
+                dispatch(savePoint(chartData[i], id))
+            }
+
+        }
+        history.push('/history');
     }
 
     return (
@@ -117,13 +125,13 @@ const Review = (props) => {
                     area="lag"
                     title="Average lag"
                     value={sessionId === 'current' ?
-                        String(calculateAverage(lags) * 1000).substring(0, 4) + "ms"
+                        String(calculateAverage(lags)).substring(0, 4) + "ms"
                         : String(specificHistory["lag"]).substring(0, 4) + "ms"}
                 />
                 <Button onClick={() => {
                     saveSession();
                 }}>
-                    Save Session
+                    {sessionId === 'current' ? 'Save Session' : 'Update Session'}
                 </Button>
             </Overall>
             <Stream>

@@ -30,6 +30,9 @@ const types = {
     SAVE_DANCER_NAMES: "SAVE_DANCER_NAMES",
     SAVE_DANCER_NAMES_SUCCESS: "SAVE_DANCER_NAMES_SUCCESS",
     SAVE_DANCER_NAMES_FAILURE: "SAVE_DANCER_NAMES_FAILURE",
+    SAVE_POINT: "SAVE_POINT",
+    SAVE_POINT_SUCCESS: "SAVE_POINT_SUCCESS",
+    SAVE_POINT_FAILURE: "SAVE_POINT_FAILURE",
     GET_PAST_SESSIONS: "GET_PAST_SESSIONS",
     GET_PAST_SESSIONS_SUCCESS: "GET_PAST_SESSIONS_SUCCESS",
     GET_PAST_SESSIONS_FAILURE: "GET_PAST_SESSIONS_FAILURE",
@@ -213,6 +216,24 @@ const saveDancerNamesSuccess = (averageLag) => {
 const saveDancerNamesFailure = () => {
     return { 
         type: types.SAVE_DANCER_NAMES_FAILURE,
+    };
+};
+
+const initSavePoint = () => {
+    return { 
+        type: types.SAVE_POINT,
+    };
+};
+
+const savePointSuccess = (averageLag) => {
+    return { 
+        type: types.SAVE_POINT_SUCCESS,
+    };
+};
+
+const savePointFailure = () => {
+    return { 
+        type: types.SAVE_POINT_FAILURE,
     };
 };
 
@@ -488,7 +509,7 @@ const dataReducer = (
                 return state;
             }
             case types.TOGGLE_DATA_VIEW: {
-                console.log("TOGGLE_DATA_VIEW - dataView: ", state.session.dataView)
+                // console.log("TOGGLE_DATA_VIEW - dataView: ", state.session.dataView)
                 return { 
                     ...state, 
                     session: {
@@ -618,7 +639,7 @@ export const getOverallAverageLag = () => {
     };
 };
 
-export const saveDancerNames = (metadata) => {
+export const saveDancerNames = (metadata, sessionId) => {
     return function (dispatch) {
         dispatch(getNewSessionId);
         dispatch(initSaveDancerNames());
@@ -631,11 +652,28 @@ export const saveDancerNames = (metadata) => {
                     "dancer1": metadata.dancerNames && metadata.dancerNames[1] ? metadata.dancerNames[1] : "Dancer 1",
                     "dancer2": metadata.dancerNames && metadata.dancerNames[2] ? metadata.dancerNames[2] : "Dancer 2",
                     "dancer3": metadata.dancerNames && metadata.dancerNames[3] ? metadata.dancerNames[3] : "Dancer 3",
-                    "id": metadata.sessionId
+                    "id": sessionId
                 }}
             )
             .then(res => dispatch(saveDancerNamesSuccess(res.data['response'])))
             .catch(error => dispatch(saveDancerNamesFailure(error.message)));
+    };
+};
+
+export const savePoint = (data, sessionId) => {
+    return function (dispatch) {
+        dispatch(initSavePoint());
+        axios
+            .post(
+                "http://localhost:3001/savepoint",
+                null,
+                { params: {
+                    "data": data,
+                    "id": sessionId
+                }}
+            )
+            .then(res => dispatch(savePointSuccess(res.data['response'])))
+            .catch(error => dispatch(savePointFailure(error.message)));
     };
 };
 

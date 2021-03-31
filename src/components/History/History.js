@@ -120,7 +120,7 @@ const History = () => {
             <Overall>
                 <Values>
                     <ValueCard area='acc' title={"Average \nprediction accuracy"} value={String(metadata['overallAverageAccuracy']).substring(0,5)+"%"}/>
-                    <ValueCard area='lag' title="Average lag" value={String(metadata['overallAverageLag']*1000).substring(0, 4)+"ms"}/>
+                    <ValueCard area='lag' title="Average lag" value={String(metadata['overallAverageLag']).substring(0, 4)+"ms"}/>
                 </Values>
                 <Div><BasicBarChart data={data} component="history"/></Div>
             </Overall>

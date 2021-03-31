@@ -33,7 +33,7 @@ const BasicLineChart = ({ area, data }) => {
 
     const items = data.map(item => ({
         move: item[4],
-        lag: item[5]*1000
+        lag: item[5]
     }))
 
     return (

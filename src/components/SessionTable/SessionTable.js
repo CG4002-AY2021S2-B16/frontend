@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSelector } from "react-redux";
 
@@ -8,8 +8,8 @@ const SessionTableDiv = styled.div`
     display: grid;
     grid-area: graph;
     grid-template-areas: 
-        'title'
-        'table';
+        'title moveScore posScore'
+        'table table     table   ';
     min-width: 60vw;
     max-width: 70vw;
     text-align: left;
@@ -24,6 +24,26 @@ const Title = styled.div`
     font-size: 22px;
     text-align: left;
     font-weight: 600;
+`
+
+const MoveScore = styled.div`
+    display: grid;
+    grid-area: moveScore;
+    margin: 0 10px;
+    color: ${colours.darkGreen};
+    font-size: 22px;
+    text-align: right;
+    font-weight: 400;
+`
+
+const PosScore = styled.div`
+    display: grid;
+    grid-area: posScore;
+    margin: 0 10px;
+    color: ${colours.darkGreen};
+    font-size: 22px;
+    text-align: right;
+    font-weight: 400;
 `
 
 const TableDiv = styled.div`
@@ -47,6 +67,7 @@ const Table = styled.table`
 
 const Tr = styled.tr`
     height: 40px;
+    max-height: 40px;
     border-radius: 6px;
 `
 
@@ -83,22 +104,45 @@ const Text = styled.div`
     align-self: centre;
 `
 
-const SessionTable = (sessionId) => {
+const SessionTable = ({session}) => {
 
     const { data, specificHistory } = useSelector(state => state);
 
     var tableData;
 
-    if (sessionId === "current") {
+    if (session === 'current') {
         tableData = data ? data : [];
+        // console.log("tableData data: ", tableData);
     }
     else {
         tableData = specificHistory.moves ? specificHistory.moves : [];
+        // console.log("tableData specificHistory: ", tableData);
     }
+
+    const [ correctMoves, setCorrectMoves ] = useState(Array(tableData.length).fill(false));
+    const [ correctPos, setCorrectPos ] = useState(Array(tableData.length).fill(false));
+
+    const handleMoveCheckbox = (index) => {
+        var arr = [...correctMoves];
+        arr[index] = !arr[index];
+        console.log("arr: ", arr);
+        setCorrectMoves(arr);
+    }
+    
+    const handlePosCheckbox = (index) => {
+        var arr = [...correctPos];
+        arr[index] = !arr[index];
+        console.log("arr: ", arr);
+        setCorrectPos(arr);
+    }
+
+    const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
     
     return (
     <SessionTableDiv>
         <Title>Predictions Recorded</Title>
+        <MoveScore>Move Predictions: {countOccurrences(correctMoves, true)}/{tableData.length}</MoveScore>
+        <PosScore>Position Predictions: {countOccurrences(correctPos, true)}/{tableData.length}</PosScore>
         <TableDiv>
             {tableData.length === 0 ? 
             <Text>No data available</Text>
@@ -108,15 +152,18 @@ const SessionTable = (sessionId) => {
                     <Th>Positions</Th>
                     <Th>Lag</Th>
                     <Th>Accuracy</Th>
+                    <Th>Move Correct?</Th>
+                    <Th>Positions Correct?</Th>
                 </Tr>
-                {tableData.map(item => {
+                {tableData.map((item, index) => {
                     return (
                     <Tr>
                         <Td>{item[4]}</Td>
                         <Td>{item[1] + ", " + item[2] + ", " + item[3]}</Td>
-                        <Td>{item[5]*1000}</Td>
+                        <Td>{item[5]}</Td>
                         <Td>{item[6]}</Td>
-                        {/* <Td><A href='/'>View Details >>></A></Td> */}
+                        <Td><input type="checkbox" name="move" onClick={() => handleMoveCheckbox(index)}/></Td>
+                        <Td><input type="checkbox" name="position" onClick={() => handlePosCheckbox(index)}/></Td>
                     </Tr>
                 )})}
             </Table>}

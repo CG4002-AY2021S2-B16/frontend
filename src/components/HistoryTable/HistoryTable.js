@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from "react-redux";
 
@@ -130,20 +130,22 @@ const HistoryTable = () => {
                     <Th>Date</Th>
                     <Th>Time</Th>
                     <Th>Dancers</Th>
+                    {/* <Th>Accuracy</Th> */}
                     <Th>View Session</Th>
                 </Tr>
-                {Object.entries(items).map(item => {
+                {Object.entries(items).map((item, index) => {
 
                     var dancerOneName = item[1]["dancerOneName"] ? item[1]["dancerOneName"] : "Not recorded";
                     var dancerTwoName = item[1]["dancerTwoName"] ? item[1]["dancerTwoName"] : "Not recorded";
                     var dancerThreeName = item[1]["dancerThreeName"] ? item[1]["dancerThreeName"] : "Not recorded";
-                    
+
                     return (
-                    <Tr>
+                    <Tr key={index}>
                         <Td>{item[0]}</Td>
                         <Td>{item[1]["date"]}</Td>
                         <Td>{item[1]["time"]}</Td>
                         <Td>{dancerOneName + ", " + dancerTwoName + ", " + dancerThreeName}</Td>
+                        {/* <Td>Accuracy</Td> */}
                         <Td><A href={'/review/'+item[0]}>View Details >>></A></Td>
                     </Tr>
                 )})}

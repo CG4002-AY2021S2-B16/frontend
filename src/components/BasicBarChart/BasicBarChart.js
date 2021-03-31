@@ -38,13 +38,15 @@ const tooltipTextStyle = {
 }
 
 const BasicBarChart = ({ data, component }) => {
+
     const movesAndLags = component === "review" ?
         data.map(item => ({
             move: item[4],
-            lag: item[5] * 1000
+            lag: item[5]
         }))
         : data;
 
+    // console.log("basicbarchart movesAndLags: ", movesAndLags);
     const calculateAverage = arr => {
         return arr.reduce((a, b) => a + b, 0) / arr.length;
     }
@@ -62,6 +64,8 @@ const BasicBarChart = ({ data, component }) => {
             move: move,
             averageLag: calculateAverage(totalLagPerMove[move])
         }))
+
+        console.log("basicbarchart averageLagPerMove: ", averageLagPerMove)
 
         return averageLagPerMove;
     };

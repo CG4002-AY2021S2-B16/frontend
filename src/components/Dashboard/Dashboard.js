@@ -185,7 +185,7 @@ const Dashboard = () => {
                             <PositionCard area="position2" dancer={dancerNames[2]} position={latestDataPoint[2]} />
                             <PositionCard area="position3" dancer={dancerNames[3]} position={latestDataPoint[3]} />
                         </Positions>
-                        <MoveCard move={latestDataPoint[4]} lag={latestDataPoint[5] * 1000} />
+                        <MoveCard move={latestDataPoint[4]} lag={latestDataPoint[5]} />
                     </>}
                 <Toggle>
                     <Input
