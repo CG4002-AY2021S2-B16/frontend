@@ -119,8 +119,8 @@ const History = () => {
         <Body>
             <Overall>
                 <Values>
-                    <ValueCard area='acc' title={"Average \nprediction accuracy"} value={String(metadata['overallAverageAccuracy']).substring(0,5)+"%"}/>
-                    <ValueCard area='lag' title="Average lag" value={String(metadata['overallAverageLag']).substring(0, 4)+"ms"}/>
+                    <ValueCard area='acc' title={"Average \nprediction accuracy"} value={metadata['overallAverageAccuracy'] ? String(metadata['overallAverageAccuracy']).substring(0,5)+"%" : "No data"}/>
+                    <ValueCard area='lag' title="Average lag" value={metadata['overallAverageLag'] ? String(metadata['overallAverageLag']).substring(0, 4)+"ms" : "No data"}/>
                 </Values>
                 <Div><BasicBarChart data={data} component="history"/></Div>
             </Overall>

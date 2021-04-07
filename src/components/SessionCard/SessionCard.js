@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled from 'styled-components';
 
@@ -97,30 +97,32 @@ const Input = styled.input`
     font-size: 16px;
 `
 
-const SessionCard = () => {
+const SessionCard = ({ sessionId, items }) => {
 
     const { metadata, session } = useSelector(state => state);
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
+    useEffect((items) => {
+        if (items) {
+            // console.log("SessionCard: ", sessionId, items, items["6"])
+        }
         dispatch(getNewSessionId());
-    }, [dispatch]);
+    }, [dispatch, sessionId]);
 
     const date = Date().split(' ');
     date.splice(-5);
     const currentDate = date.join(' ')
-    // console.log(currentDate);
 
     const updateDancerName = (event) => {
         if (event.target.id === '1') dispatch(updateDancerOneName(event.target.value));
         else if (event.target.id === '2') dispatch(updateDancerTwoName(event.target.value));
         else dispatch(updateDancerThreeName(event.target.value));
     }
-    
+
     const getTimeElapsed = (metadata) => {
-        if (metadata["startTime"] && session.sync) { 
-            var secondsElapsed = (Date.now()-metadata["startTime"])/1000;
+        if (metadata["startTime"] && session.sync) {
+            var secondsElapsed = (Date.now() - metadata["startTime"]) / 1000;
             return secondsElapsed;
         }
         return 0;
@@ -128,41 +130,84 @@ const SessionCard = () => {
 
     return (
         <Card>
-            <Title>Session #{metadata.sessionId} Details</Title>
+            <Title>Session #{sessionId === 'current' ? metadata.sessionId : sessionId} Details</Title>
             <Details>
                 <Session>
                     <Text grid-area="id">{currentDate}</Text>
-                    <Text grid-area="date">Time elapsed: {getTimeElapsed(metadata) > 0 ? getTimeElapsed(metadata)+"s" : "Session not started"}</Text>
+                    <Text grid-area="date">Time elapsed: {getTimeElapsed(metadata) > 0 ? getTimeElapsed(metadata) + "s" : "Session not started"}</Text>
                 </Session>
-                <Dancers>
-                    <Label area="dancer1Label">Dancer 1</Label>
-                    <Label area="dancer2Label">Dancer 2</Label>
-                    <Label area="dancer3Label">Dancer 3</Label>
-                    <Input 
-                        area="dancer1Input" 
-                        id="1"
-                        onBlur={(event) => {
-                            updateDancerName(event);
-                        }}
-                        placeholder={metadata['dancerNames'] ? metadata['dancerNames'][1] : "Enter Dancer 1's name"}
-                    />
-                    <Input 
-                        area="dancer2Input" 
-                        id="2"
-                        onBlur={(event) => {
-                            updateDancerName(event);
-                        }}
-                        placeholder={metadata['dancerNames'] ? metadata['dancerNames'][2] : "Enter Dancer 2's name"}
-                    />
-                    <Input 
-                        area="dancer3Input" 
-                        id="3"
-                        onBlur={(event) => {
-                            updateDancerName(event);
-                        }}
-                        placeholder={metadata['dancerNames'] ? metadata['dancerNames'][3] : "Enter Dancer 3's name"}
-                    />
-                </Dancers>
+                {sessionId === 'current' ?
+                    <Dancers>
+                        <Label area="dancer1Label">Dancer 1</Label>
+                        <Label area="dancer2Label">Dancer 2</Label>
+                        <Label area="dancer3Label">Dancer 3</Label>
+                        <Input
+                            area="dancer1Input"
+                            id="1"
+                            onBlur={(event) => {
+                                updateDancerName(event);
+                            }}
+                            placeholder={metadata['dancerNames'] ? metadata['dancerNames'][1] : "Enter Dancer 1's name"}
+                        />
+                        <Input
+                            area="dancer2Input"
+                            id="2"
+                            onBlur={(event) => {
+                                updateDancerName(event);
+                            }}
+                            placeholder={metadata['dancerNames'] ? metadata['dancerNames'][2] : "Enter Dancer 2's name"}
+                        />
+                        <Input
+                            area="dancer3Input"
+                            id="3"
+                            onBlur={(event) => {
+                                updateDancerName(event);
+                            }}
+                            placeholder={metadata['dancerNames'] ? metadata['dancerNames'][3] : "Enter Dancer 3's name"}
+                        />
+                    </Dancers>
+                    :
+                    (items && items[sessionId]) ?
+                        <Dancers>
+                            <Label area="dancer1Label">Dancer 1</Label>
+                            <Label area="dancer2Label">Dancer 2</Label>
+                            <Label area="dancer3Label">Dancer 3</Label>
+                            <Label area="dancer1Input">{items[sessionId]["dancerOneName"]}</Label>
+                            <Label area="dancer2Input">{items[sessionId]["dancerTwoName"]}</Label>
+                            <Label area="dancer3Input">{items[sessionId]["dancerThreeName"]}</Label>
+                        </Dancers>
+                        :
+                        <Dancers>
+                            <Label area="dancer1Label">Dancer 1</Label>
+                            <Label area="dancer2Label">Dancer 2</Label>
+                            <Label area="dancer3Label">Dancer 3</Label>
+                            <Input
+                                area="dancer1Input"
+                                id="1"
+                                onBlur={(event) => {
+                                    updateDancerName(event);
+                                }}
+                                placeholder={metadata['dancerNames'] ? metadata['dancerNames'][1] : "Enter Dancer 1's name"}
+                            />
+                            <Input
+                                area="dancer2Input"
+                                id="2"
+                                onBlur={(event) => {
+                                    updateDancerName(event);
+                                }}
+                                placeholder={metadata['dancerNames'] ? metadata['dancerNames'][2] : "Enter Dancer 2's name"}
+                            />
+                            <Input
+                                area="dancer3Input"
+                                id="3"
+                                onBlur={(event) => {
+                                    updateDancerName(event);
+                                }}
+                                placeholder={metadata['dancerNames'] ? metadata['dancerNames'][3] : "Enter Dancer 3's name"}
+                            />
+                        </Dancers>}
+
+
             </Details>
         </Card>
     )

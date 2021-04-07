@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from "react-redux";
 
@@ -47,7 +48,7 @@ const Table = styled.table`
 `
 
 const Tr = styled.tr`
-    height: 40px;
+    max-height: 40px;
     border-radius: 6px;
 `
 
@@ -119,39 +120,56 @@ const HistoryTable = () => {
     });
 
     return (
-    <HistoryTableDiv>
-        <Title>Past Sessions</Title>
-        <TableDiv>
-            {graphData.length === 0 ? 
-            <Text>Not connected to backend</Text>
-            : <Table>
-                <Tr>
-                    <Th>Id</Th>
-                    <Th>Date</Th>
-                    <Th>Time</Th>
-                    <Th>Dancers</Th>
-                    {/* <Th>Accuracy</Th> */}
-                    <Th>View Session</Th>
-                </Tr>
-                {Object.entries(items).map((item, index) => {
+        <HistoryTableDiv>
+            <Title>Past Sessions</Title>
+            <TableDiv>
+                {graphData.length === 0 ?
+                    <Text>Not connected to backend</Text>
+                    : <Table>
+                        <Tr>
+                            <Th>Id</Th>
+                            <Th>Date</Th>
+                            <Th>Time</Th>
+                            <Th>Dancers</Th>
+                            {/* <Th>Accuracy</Th> */}
+                            <Th>View Session</Th>
+                        </Tr>
+                        {Object.entries(items).map((item, index) => {
 
-                    var dancerOneName = item[1]["dancerOneName"] ? item[1]["dancerOneName"] : "Not recorded";
-                    var dancerTwoName = item[1]["dancerTwoName"] ? item[1]["dancerTwoName"] : "Not recorded";
-                    var dancerThreeName = item[1]["dancerThreeName"] ? item[1]["dancerThreeName"] : "Not recorded";
+                            var dancerOneName = item[1]["dancerOneName"] ? item[1]["dancerOneName"] : "Not recorded";
+                            var dancerTwoName = item[1]["dancerTwoName"] ? item[1]["dancerTwoName"] : "Not recorded";
+                            var dancerThreeName = item[1]["dancerThreeName"] ? item[1]["dancerThreeName"] : "Not recorded";
 
-                    return (
-                    <Tr key={index}>
-                        <Td>{item[0]}</Td>
-                        <Td>{item[1]["date"]}</Td>
-                        <Td>{item[1]["time"]}</Td>
-                        <Td>{dancerOneName + ", " + dancerTwoName + ", " + dancerThreeName}</Td>
-                        {/* <Td>Accuracy</Td> */}
-                        <Td><A href={'/review/'+item[0]}>View Details >>></A></Td>
-                    </Tr>
-                )})}
-            </Table>}
-        </TableDiv>
-    </HistoryTableDiv>
-)}
+                            // Convert UTC to SGT
+                            var time = item[1]["time"];
+                            var sgtTime = time[0] + String(parseInt(time[1])+8) + time.substring(2)
+
+                            return (
+                                <Tr key={index}>
+                                    <Td>{item[0]}</Td>
+                                    <Td>{item[1]["date"]}</Td>
+                                    <Td>{sgtTime}</Td>
+                                    <Td>{dancerOneName + ", " + dancerTwoName + ", " + dancerThreeName}</Td>
+                                    {/* <Td>Accuracy</Td> */}
+                                    <Td>
+                                        <Link
+                                            style={{
+                                                textDecoration: 'none',
+                                                color: colours.darkBlue,
+                                                fontSize: '16px'
+                                            }}
+                                            to={'/review/' + item[0]}
+                                        >
+                                            View Details >>>
+                                        </Link>
+                                    </Td>
+                                </Tr>
+                            )
+                        })}
+                    </Table>}
+            </TableDiv>
+        </HistoryTableDiv>
+    )
+}
 
 export default HistoryTable;

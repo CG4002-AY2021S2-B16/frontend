@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 
 import colours from '../../colours';
 
+import { markPosPrediction, markMovePrediction } from "../../store/data";
+
 const SessionTableDiv = styled.div`
     display: grid;
     grid-area: graph;
@@ -106,34 +108,39 @@ const Text = styled.div`
 
 const SessionTable = ({session}) => {
 
-    const { data, specificHistory } = useSelector(state => state);
+    const { data, metadata, specificHistory } = useSelector(state => state);
 
     var tableData;
 
     if (session === 'current') {
         tableData = data ? data : [];
-        // console.log("tableData data: ", tableData);
+        console.log("current: ", tableData)
     }
     else {
         tableData = specificHistory.moves ? specificHistory.moves : [];
-        // console.log("tableData specificHistory: ", tableData);
+        console.log("specificHistory: ", tableData)
+
     }
 
     const [ correctMoves, setCorrectMoves ] = useState(Array(tableData.length).fill(false));
     const [ correctPos, setCorrectPos ] = useState(Array(tableData.length).fill(false));
 
     const handleMoveCheckbox = (index) => {
+        const id = session === 'current' ? metadata.sessionId : session;
         var arr = [...correctMoves];
         arr[index] = !arr[index];
-        console.log("arr: ", arr);
+        console.log("move arr: ", arr);
         setCorrectMoves(arr);
+        markMovePrediction(data, id, !arr[index])
     }
     
     const handlePosCheckbox = (index) => {
+        const id = session === 'current' ? metadata.sessionId : session;
         var arr = [...correctPos];
         arr[index] = !arr[index];
-        console.log("arr: ", arr);
+        console.log("pos arr: ", arr);
         setCorrectPos(arr);
+        markPosPrediction(data, id, !arr[index])
     }
 
     const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
@@ -141,8 +148,8 @@ const SessionTable = ({session}) => {
     return (
     <SessionTableDiv>
         <Title>Predictions Recorded</Title>
-        <MoveScore>Move Predictions: {countOccurrences(correctMoves, true)}/{tableData.length}</MoveScore>
-        <PosScore>Position Predictions: {countOccurrences(correctPos, true)}/{tableData.length}</PosScore>
+        <MoveScore>Move Predictions: {countOccurrences(correctMoves, true)/tableData.length}% ({countOccurrences(correctMoves, true)}/{tableData.length})</MoveScore>
+        <PosScore>Position Predictions: {countOccurrences(correctPos, true)/tableData.length}% ({countOccurrences(correctPos, true)}/{tableData.length})</PosScore>
         <TableDiv>
             {tableData.length === 0 ? 
             <Text>No data available</Text>

@@ -33,6 +33,12 @@ const types = {
     SAVE_POINT: "SAVE_POINT",
     SAVE_POINT_SUCCESS: "SAVE_POINT_SUCCESS",
     SAVE_POINT_FAILURE: "SAVE_POINT_FAILURE",
+    MARK_POS_PREDICTION: "MARK_POS_PREDICTION",
+    MARK_POS_PREDICTION_SUCCESS: "MARK_POS_PREDICTION_SUCCESS",
+    MARK_POS_PREDICTION_FAILURE: "MARK_POS_PREDICTION_FAILURE",
+    MARK_MOVE_PREDICTION: "MARK_MOVE_PREDICTION",
+    MARK_MOVE_PREDICTION_SUCCESS: "MARK_MOVE_PREDICTION_SUCCESS",
+    MARK_MOVE_PREDICTION_FAILURE: "MARK_MOVE_PREDICTION_FAILURE",
     GET_PAST_SESSIONS: "GET_PAST_SESSIONS",
     GET_PAST_SESSIONS_SUCCESS: "GET_PAST_SESSIONS_SUCCESS",
     GET_PAST_SESSIONS_FAILURE: "GET_PAST_SESSIONS_FAILURE",
@@ -234,6 +240,42 @@ const savePointSuccess = (averageLag) => {
 const savePointFailure = () => {
     return { 
         type: types.SAVE_POINT_FAILURE,
+    };
+};
+
+const initMarkPosPrediction = () => {
+    return { 
+        type: types.MARK_POS_PREDICTION,
+    };
+};
+
+const markPosPredictionSuccess = (averageLag) => {
+    return { 
+        type: types.MARK_POS_PREDICTION_SUCCESS,
+    };
+};
+
+const markPosPredictionFailure = () => {
+    return { 
+        type: types.MARK_POS_PREDICTION_FAILURE,
+    };
+};
+
+const initMarkMovePrediction = () => {
+    return { 
+        type: types.MARK_MOVE_PREDICTION,
+    };
+};
+
+const markMovePredictionSuccess = (averageLag) => {
+    return { 
+        type: types.MARK_MOVE_PREDICTION_SUCCESS,
+    };
+};
+
+const markMovePredictionFailure = () => {
+    return { 
+        type: types.MARK_MOVE_PREDICTION_FAILURE,
     };
 };
 
@@ -484,6 +526,24 @@ const dataReducer = (
             case types.SAVE_DANCER_NAMES_FAILURE: {
                 return state;
             }
+            case types.MARK_POS_PREDICTION: {
+                return state;
+            }
+            case types.MARK_POS_PREDICTION_SUCCESS: {
+                return state;
+            }
+            case types.MARK_POS_PREDICTION_FAILURE: {
+                return state;
+            }
+            case types.MARK_MOVE_PREDICTION: {
+                return state;
+            }
+            case types.MARK_MOVE_PREDICTION_SUCCESS: {
+                return state;
+            }
+            case types.MARK_MOVE_PREDICTION_FAILURE: {
+                return state;
+            }
             case types.GET_PAST_SESSIONS: {
                 return state;
             }
@@ -674,6 +734,42 @@ export const savePoint = (data, sessionId) => {
             )
             .then(res => dispatch(savePointSuccess(res.data['response'])))
             .catch(error => dispatch(savePointFailure(error.message)));
+    };
+};
+
+export const markPosPrediction = (data, sessionId, accuratePos) => {
+    return function (dispatch) {
+        dispatch(initMarkPosPrediction());
+        axios
+            .post(
+                "http://localhost:3001/markposprediction",
+                null,
+                { params: {
+                    "timestamp": data[0],
+                    "id": sessionId,
+                    "accuratePos": accuratePos,
+                }}
+            )
+            .then(res => dispatch(markPosPredictionSuccess(res.data['response'])))
+            .catch(error => dispatch(markPosPredictionFailure(error.message)));
+    };
+};
+
+export const markMovePrediction = (data, sessionId, accurateMov) => {
+    return function (dispatch) {
+        dispatch(initMarkMovePrediction());
+        axios
+            .post(
+                "http://localhost:3001/markmoveprediction",
+                null,
+                { params: {
+                    "timestamp": data[0],
+                    "id": sessionId,
+                    "accurateMov": accurateMov,
+                }}
+            )
+            .then(res => dispatch(markMovePredictionSuccess(res.data['response'])))
+            .catch(error => dispatch(markMovePredictionFailure(error.message)));
     };
 };
 

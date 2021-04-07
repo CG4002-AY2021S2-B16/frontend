@@ -65,7 +65,7 @@ const BasicBarChart = ({ data, component }) => {
             averageLag: calculateAverage(totalLagPerMove[move])
         }))
 
-        console.log("basicbarchart averageLagPerMove: ", averageLagPerMove)
+        // console.log("basicbarchart averageLagPerMove: ", averageLagPerMove)
 
         return averageLagPerMove;
     };

@@ -154,7 +154,7 @@ const Dashboard = () => {
     return (
         <Body>
             <Metadata>
-                <SessionCard grid-area="session" />
+                <SessionCard grid-area="session" sessionId='current'/>
                 <AccuracyCard accuracy={latestDataPoint[6]} />
                 <PlayCard />
             </Metadata>

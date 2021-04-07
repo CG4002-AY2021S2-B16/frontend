@@ -9,7 +9,7 @@ import SessionCard from '../SessionCard/SessionCard';
 import SessionTable from '../SessionTable/SessionTable';
 import ValueCard from '../ValueCard/ValueCard';
 
-import { getPastSession, saveDancerNames, savePoint } from "../../store/data";
+import { getPastSession, saveDancerNames } from "../../store/data";
 
 import colours from '../../colours';
 
@@ -68,12 +68,15 @@ const Button = styled.div`
 
 const Review = (props) => {
 
-    const { metadata, data, specificHistory } = useSelector(state => state);
+    const { metadata, data, history, specificHistory } = useSelector(state => state);
 
     const dispatch = useDispatch();
-    const history = createBrowserHistory({
+    const hist = createBrowserHistory({
         forceRefresh: true
     });
+
+    const formattedHistory = history ? history : [];
+    var items = {};
 
     const sessionId = props.match.params.id;
     const accuracies = data ? data.map(item => parseFloat(item[6])) : [];
@@ -84,7 +87,21 @@ const Review = (props) => {
         if (sessionId !== 'current') {
             dispatch(getPastSession(sessionId))
         }
-    }, [dispatch, sessionId]);
+        formattedHistory.forEach(item => {
+            var id = item["sessionid"];
+            if (items[id]) {
+                items[id][item["field"]] = item["value"];
+            }
+            else {
+                var session = {
+                    "time": item["time"],
+                    "date": item["date"],
+                }
+                items[id] = session;
+                items[id][item["field"]] = item["value"];
+            }
+        });
+    }, [dispatch, sessionId, formattedHistory]);
 
     if (sessionId === 'current') {
         chartData = data ? data : [];
@@ -100,33 +117,30 @@ const Review = (props) => {
     const saveSession = () => {
         const id = sessionId === 'current' ? metadata.sessionId : sessionId;
         dispatch(saveDancerNames(metadata, id));
-        var i;
-        if (sessionId === 'current') {
-            for (i=0; i<chartData.length; i++) {
-                dispatch(savePoint(chartData[i], id))
-            }
-
-        }
-        history.push('/history');
+        hist.push('/history');
     }
 
     return (
         <Body>
             <Overall>
-                <SessionCard grid-area="session" />
+                <SessionCard grid-area="session" sessionId={sessionId} items={items} />
                 <ValueCard
                     area="accuracy"
                     title={"Average \nprediction accuracy"}
                     value={sessionId === 'current' ?
                         String(calculateAverage(accuracies)).substring(0, 4) + "%"
-                        : String(specificHistory["accuracy"]).substring(0, 4) + "%"}
+                        : specificHistory["accuracy"] ?
+                        String(specificHistory["accuracy"]).substring(0, 4) + "%"
+                        : "No data"}
                 />
                 <ValueCard
                     area="lag"
                     title="Average lag"
                     value={sessionId === 'current' ?
                         String(calculateAverage(lags)).substring(0, 4) + "ms"
-                        : String(specificHistory["lag"]).substring(0, 4) + "ms"}
+                        : specificHistory["lag"] ?
+                        String(specificHistory["lag"]).substring(0, 4) + "ms"
+                        : "No data"}
                 />
                 <Button onClick={() => {
                     saveSession();
