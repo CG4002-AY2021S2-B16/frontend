@@ -29,7 +29,7 @@ const Text = styled.div`
 
 const AccuracyCard = ({accuracy}) => (
     <Card orange={accuracy < 95}>
-        <Text type="value" grid-area="value">{accuracy}%</Text>
+        <Text type="value" grid-area="value">{accuracy ? String(accuracy).substring(0,5)+'%' : '-'}</Text>
         <Text type="title" grid-area="title">Prediction Accuracy</Text>
     </Card>
 )

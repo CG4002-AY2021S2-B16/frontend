@@ -59,7 +59,7 @@ const Div = styled.div`
     margin: 10px;
     padding: 10px;
     border-radius: 6px;
-    background: ${colours.darkBlue}
+    background: ${colours.darkBlue};
 `
 
 // TODO: Get actual data instead of placeholder data
@@ -120,9 +120,11 @@ const History = () => {
             <Overall>
                 <Values>
                     <ValueCard area='acc' title={"Average \nprediction accuracy"} value={metadata['overallAverageAccuracy'] ? String(metadata['overallAverageAccuracy']).substring(0,5)+"%" : "No data"}/>
-                    <ValueCard area='lag' title="Average lag" value={metadata['overallAverageLag'] ? String(metadata['overallAverageLag']).substring(0, 4)+"ms" : "No data"}/>
+                    <ValueCard area='lag' title="Average lag" value={metadata['overallAverageLag'] ? String(metadata['overallAverageLag']).split('.')[0]+"ms" : "No data"}/>
                 </Values>
-                <Div><BasicBarChart data={data} component="history"/></Div>
+                <Div>
+                    <BasicBarChart data={data} noData={!(metadata['overallAverageAccuracy'] && metadata['overallAverageLag'])} component="history"/>
+                </Div>
             </Overall>
             <Past>
                 <HistoryTable />

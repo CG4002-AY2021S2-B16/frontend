@@ -79,7 +79,6 @@ const PlayCard = () => {
         const socket = socketIOClient(API_ENDPOINT);
         if (session.sync) {
             dispatch(addEndTime());
-            console.log("disconnecting", socket.disconnect());
             socket.on(SOCKET_NAME_PREDICTIONS, function () {
                 socket.disconnect();
             });
@@ -90,15 +89,12 @@ const PlayCard = () => {
         else {
             dispatch(addStartTime());
             socket.on(SOCKET_NAME_PREDICTIONS, data => {
-                // console.log("Received prediction: ", data);
                 dispatch(addData(data));
             });
             socket.on(SOCKET_NAME_SENSOR_DATA, data => {
-                // console.log("Received sensor data: ", data);
                 dispatch(addSensorData(data));
             });
             socket.on(SOCKET_NAME_EMG_DATA, data => {
-                // console.log("Received emg data: ", data);
                 dispatch(addEMGData(data));
             });
         }

@@ -37,10 +37,6 @@ const EMGLineChart = ({ area, title }) => {
 
     const { EMGData } = useSelector(state => state);
 
-    // useEffect(() => {
-    //     console.log(sensorData)
-    // }, [sensorData]);
-
     const graphData = EMGData ? EMGData : [];
 
     const items = graphData.map(item => ({

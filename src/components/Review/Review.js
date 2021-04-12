@@ -9,7 +9,7 @@ import SessionCard from '../SessionCard/SessionCard';
 import SessionTable from '../SessionTable/SessionTable';
 import ValueCard from '../ValueCard/ValueCard';
 
-import { getPastSession, saveDancerNames } from "../../store/data";
+import { getPastSession, getPastSessions, saveDancerNames, savePoint } from "../../store/data";
 
 import colours from '../../colours';
 
@@ -32,9 +32,9 @@ const Overall = styled.div`
     grid-area: overall;
     grid-template-areas:
         'session '
-        'accuracy'
+        'save    '
         'lag     '
-        'save    ';
+        'accuracy';
     grid-auto-rows: min-content;
     align-content: start;
 `
@@ -53,7 +53,7 @@ const Stream = styled.div`
 
 const Button = styled.div`
     grid-area: save;
-    margin: 5px;
+    margin: 5px 10px;
     padding: 16px 0;
     background-color: ${colours.darkGreen};
     border: none;
@@ -68,15 +68,15 @@ const Button = styled.div`
 
 const Review = (props) => {
 
-    const { metadata, data, history, specificHistory } = useSelector(state => state);
+    const { metadata, data, specificHistory } = useSelector(state => state);
 
     const dispatch = useDispatch();
     const hist = createBrowserHistory({
         forceRefresh: true
     });
 
-    const formattedHistory = history ? history : [];
-    var items = {};
+    // const formattedHistory = history ? history : [];
+    // var items = {};
 
     const sessionId = props.match.params.id;
     const accuracies = data ? data.map(item => parseFloat(item[6])) : [];
@@ -87,21 +87,10 @@ const Review = (props) => {
         if (sessionId !== 'current') {
             dispatch(getPastSession(sessionId))
         }
-        formattedHistory.forEach(item => {
-            var id = item["sessionid"];
-            if (items[id]) {
-                items[id][item["field"]] = item["value"];
-            }
-            else {
-                var session = {
-                    "time": item["time"],
-                    "date": item["date"],
-                }
-                items[id] = session;
-                items[id][item["field"]] = item["value"];
-            }
-        });
-    }, [dispatch, sessionId, formattedHistory]);
+        else {
+            dispatch(getPastSessions())
+        }
+    }, [dispatch, sessionId]);
 
     if (sessionId === 'current') {
         chartData = data ? data : [];
@@ -117,16 +106,17 @@ const Review = (props) => {
     const saveSession = () => {
         const id = sessionId === 'current' ? metadata.sessionId : sessionId;
         dispatch(saveDancerNames(metadata, id));
+        data.forEach(point => dispatch(savePoint(point, id)))
         hist.push('/history');
     }
 
     return (
         <Body>
             <Overall>
-                <SessionCard grid-area="session" sessionId={sessionId} items={items} />
+                <SessionCard grid-area="session" sessionId={sessionId} />
                 <ValueCard
                     area="accuracy"
-                    title={"Average \nprediction accuracy"}
+                    title={"Average ML\nprediction accuracy"}
                     value={sessionId === 'current' ?
                         String(calculateAverage(accuracies)).substring(0, 4) + "%"
                         : specificHistory["accuracy"] ?
@@ -145,7 +135,7 @@ const Review = (props) => {
                 <Button onClick={() => {
                     saveSession();
                 }}>
-                    {sessionId === 'current' ? 'Save Session' : 'Update Session'}
+                    {sessionId === 'current' ? 'Save Session' : 'Update Dancer Names'}
                 </Button>
             </Overall>
             <Stream>

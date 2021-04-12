@@ -18,7 +18,7 @@ import colours from '../../colours';
 const Graph = styled.div`
     grid-area: ${props => props.area};
     width: 100%;
-    min-width: 20vw;
+    min-width: 18vw;
     min-height: 20vh;
     max-height: 30vh;
     margin: 5px;
@@ -39,12 +39,7 @@ const TripleLineChart = ({ area, title, type }) => {
 
     const { sensorData } = useSelector(state => state);
 
-    // useEffect(() => {
-    //     console.log(sensorData)
-    // }, [sensorData]);
-
     var graphData = sensorData ? sensorData : [];
-    // var graphData = data.slice(-100);
 
     const typeMap = {
         "timestamp": 0,
@@ -59,9 +54,7 @@ const TripleLineChart = ({ area, title, type }) => {
     const dataArray = [graphData[1].length, graphData[2].length, graphData[3].length]
     const max = Math.max(graphData[1].length, graphData[2].length, graphData[3].length);
     const maxIndex = dataArray.indexOf(Math.max(max));
-    // console.log("maxIndex: ", max, maxIndex)
 
-    // Received 1615957876226.8862 -3431 -2169 326 -4 5 -41 6
     const items = maxIndex >= 0 ?
         graphData[maxIndex + 1].map((item, index) => ({
             "timestamp": graphData[maxIndex+1][index][typeMap["timestamp"]],
@@ -71,7 +64,6 @@ const TripleLineChart = ({ area, title, type }) => {
         }))
         : [];
 
-    // console.log("Triple Line Chart - ", type, items);
 
     return (
         <Graph area={area}>

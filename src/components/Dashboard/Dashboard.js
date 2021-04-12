@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 
@@ -10,7 +10,8 @@ import PlayCard from '../PlayCard/PlayCard';
 import PositionCard from '../PositionCard/PositionCard';
 import SessionCard from '../SessionCard/SessionCard';
 import TripleLineChart from '../TripleLineChart/TripleLineChart';
-import { toggleDataView } from "../../store/data";
+
+import { toggleDataView, getNewSessionId } from "../../store/data";
 
 import colours from '../../colours';
 
@@ -21,7 +22,7 @@ const Body = styled.div`
     grid-template-areas: 
         'metadata stream';
     grid-template-columns: 400px 1fr;
-    grid-gap: 10px;
+    grid-gap: 5px;
     background: linear-gradient(180deg, ${colours.gray6} -11.15%, rgba(255, 255, 255, 0) 88.85%), ${colours.gray5};
     align-content: space-evenly;
 `
@@ -36,7 +37,7 @@ const Metadata = styled.div`
         'accuracy'
         '.       ';
     grid-auto-rows: min-content;
-    grid-gap: 10px;
+    grid-gap: 5px;
     align-content: start;
 `
 
@@ -49,7 +50,7 @@ const Stream = styled.div`
         'moves     .     '
         'graph     graph ';
     grid-auto-rows: min-content;
-    grid-gap: 10px;
+    grid-gap: 5px;
     align-content: space-evenly;
 `
 
@@ -135,17 +136,24 @@ const Input = styled.input`
 
 const Label = styled.label`
   grid-area: label;
+  min-width: 130px;
   font-size: 14px;
   line-height: 24px;
-  white-space: no-wrap;
+  text-align: center;
 `
 const Dashboard = () => {
 
     const dispatch = useDispatch();
     const { data, metadata, session } = useSelector(state => state);
 
-    var latestDataPoint = data[data.length - 1] ? data[data.length - 1] : [0, 0, 0, 0, 0, 0];
+    var latestDataPoint = data[data.length - 1] ? data[data.length - 1] : [0, null, null, null, null, null];
     var dancerNames = metadata['dancerNames'] ? metadata['dancerNames'] : { 1: "1", 2: "2", 3: "3" };
+
+    useEffect(() => {
+        if (!metadata.sessionId) {
+            dispatch(getNewSessionId());
+        }
+    }, [dispatch, metadata.sessionId]);
 
     const toggleView = () => {
         dispatch(toggleDataView());
@@ -154,7 +162,7 @@ const Dashboard = () => {
     return (
         <Body>
             <Metadata>
-                <SessionCard grid-area="session" sessionId='current'/>
+                <SessionCard grid-area="session" sessionId="current"/>
                 <AccuracyCard accuracy={latestDataPoint[6]} />
                 <PlayCard />
             </Metadata>
@@ -181,11 +189,11 @@ const Dashboard = () => {
                     //
                     <>
                         <Positions>
-                            <PositionCard area="position1" dancer={dancerNames[1]} position={latestDataPoint[1]} />
-                            <PositionCard area="position2" dancer={dancerNames[2]} position={latestDataPoint[2]} />
-                            <PositionCard area="position3" dancer={dancerNames[3]} position={latestDataPoint[3]} />
+                            <PositionCard area="position1" dancer={dancerNames[1]} position={latestDataPoint[1] ? latestDataPoint[1] : '-'} />
+                            <PositionCard area="position2" dancer={dancerNames[2]} position={latestDataPoint[2] ? latestDataPoint[2] : '-'} />
+                            <PositionCard area="position3" dancer={dancerNames[3]} position={latestDataPoint[3] ? latestDataPoint[3] : '-'} />
                         </Positions>
-                        <MoveCard move={latestDataPoint[4]} lag={latestDataPoint[5]} />
+                        <MoveCard move={latestDataPoint[4] ? latestDataPoint[4] : '-'} lag={latestDataPoint[5] ? latestDataPoint[5] : '-'} />
                     </>}
                 <Toggle>
                     <Input

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     CartesianGrid,
-    // Legend,
     Bar,
     BarChart,
     ResponsiveContainer,
@@ -12,13 +11,12 @@ import {
 import styled from 'styled-components';
 
 import colours from '../../colours';
-// import chartColours from '../../chartColours';
 
 const Graph = styled.div`
+    display: grid;
     grid-area: lagPerMove;
     width: 100%;
     max-height: 45vh;
-    padding: 10px;
 `
 
 const Text = styled.div`
@@ -29,6 +27,17 @@ const Text = styled.div`
     font-weight: ${props => props.component === 'review' ? 300 : 300};
 `
 
+const NoDataText = styled.div`
+    margin: 10px;
+    width: 95%;
+    height: 95%;
+    color: ${colours.white};
+    font-size: 40px;
+    font-weight: 300;
+    text-align: left;
+    line-height: 200px;
+`
+
 const tooltipLabelStyle = {
     color: colours.darkGreen
 }
@@ -37,7 +46,7 @@ const tooltipTextStyle = {
     color: colours.gray3
 }
 
-const BasicBarChart = ({ data, component }) => {
+const BasicBarChart = ({ data, noData, component }) => {
 
     const movesAndLags = component === "review" ?
         data.map(item => ({
@@ -46,7 +55,6 @@ const BasicBarChart = ({ data, component }) => {
         }))
         : data;
 
-    // console.log("basicbarchart movesAndLags: ", movesAndLags);
     const calculateAverage = arr => {
         return arr.reduce((a, b) => a + b, 0) / arr.length;
     }
@@ -65,8 +73,6 @@ const BasicBarChart = ({ data, component }) => {
             averageLag: calculateAverage(totalLagPerMove[move])
         }))
 
-        // console.log("basicbarchart averageLagPerMove: ", averageLagPerMove)
-
         return averageLagPerMove;
     };
 
@@ -75,28 +81,30 @@ const BasicBarChart = ({ data, component }) => {
     return (
         <Graph>
             <Text component={component}>Average Lag per Move</Text>
-            <ResponsiveContainer width="95%" height="90%">
-                <BarChart
-                    // width={400} 
-                    // height={320} 
-                    margin={{ top: 20 }}
-                    data={averageLagPerMove}
-                    layout="horizontal">
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
-                        dataKey="move" 
-                        height={70} 
-                        interval={0} 
-                        angle={-30} 
-                        dy={20} 
-                        dx={-10} 
-                        stroke={component === "review" ? colours.gray3 : colours.white} 
-                    />
-                    <YAxis stroke={component === "review" ? colours.gray3 : colours.white}/>
-                    <Tooltip labelStyle={tooltipLabelStyle} itemStyle={tooltipTextStyle}/>
-                    <Bar dataKey="averageLag" fill={component === "review" ? colours.mediumBlue : colours.white} />
-                </BarChart>
-            </ResponsiveContainer>
+                {noData === true ?
+                <NoDataText>No data</NoDataText>
+                :<ResponsiveContainer width="95%" height="95%">
+                    <BarChart
+                        // width={400} 
+                        // height={320} 
+                        margin={{ top: 20 }}
+                        data={averageLagPerMove}
+                        layout="horizontal">
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                            dataKey="move"
+                            height={70}
+                            interval={0}
+                            angle={-30}
+                            dy={20}
+                            dx={-10}
+                            stroke={component === "review" ? colours.gray3 : colours.white}
+                        />
+                        <YAxis stroke={component === "review" ? colours.gray3 : colours.white} />
+                        <Tooltip labelStyle={tooltipLabelStyle} itemStyle={tooltipTextStyle} />
+                        <Bar dataKey="averageLag" fill={component === "review" ? colours.mediumBlue : colours.white} />
+                    </BarChart>
+                </ResponsiveContainer>}
         </Graph>
     )
 }

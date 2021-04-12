@@ -11,6 +11,7 @@ const Card = styled.div`
         'title';
     grid-template-rows: 3fr 2fr;
     min-height: 14vh;
+    height: ${props => props.height};
     margin: 10px;
     padding: 20px;
     border-radius: 6px;
@@ -30,8 +31,8 @@ const Text = styled.div`
     font-weight: 300;
 `
 
-const ValueCard = ({title, value}) => (
-    <Card>
+const ValueCard = ({area, title, value, height}) => (
+    <Card area={area} height={height}>
         <Text type="value" grid-area="value">{value}</Text>
         <Text type="title" grid-area="title">{title}</Text>
     </Card>

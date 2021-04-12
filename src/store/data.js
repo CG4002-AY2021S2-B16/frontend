@@ -72,7 +72,6 @@ const initAddDataThree = (data) => {
 };
 
 const initAddData = (data) => {
-    // console.log("Adding prediction to store: ", data);
     return { 
         type: types.ADD_DATA,
         payload: data
@@ -80,7 +79,6 @@ const initAddData = (data) => {
 };
 
 const initAddSensorDataOne = (sensorData) => {
-    // console.log("initAddSensorDataOne");
     return { 
         type: types.ADD_SENSOR_DATA_ONE,
         payload: sensorData,
@@ -88,7 +86,6 @@ const initAddSensorDataOne = (sensorData) => {
 };
 
 const initAddSensorDataTwo = (sensorData) => {
-    // console.log("initAddSensorDataTwo");
     return { 
         type: types.ADD_SENSOR_DATA_TWO,
         payload: sensorData,
@@ -96,7 +93,6 @@ const initAddSensorDataTwo = (sensorData) => {
 };
 
 const initAddSensorDataThree = (sensorData) => {
-    // console.log("initAddSensorDataThree");
     return { 
         type: types.ADD_SENSOR_DATA_THREE,
         payload: sensorData,
@@ -104,7 +100,6 @@ const initAddSensorDataThree = (sensorData) => {
 };
 
 const initAddEMGData = (data) => {
-    // console.log("initAddEMGData");
     return { 
         type: types.ADD_EMG_DATA,
         payload: data
@@ -569,7 +564,6 @@ const dataReducer = (
                 return state;
             }
             case types.TOGGLE_DATA_VIEW: {
-                // console.log("TOGGLE_DATA_VIEW - dataView: ", state.session.dataView)
                 return { 
                     ...state, 
                     session: {
@@ -609,7 +603,6 @@ export const addData = (data) => {
 
 export const addSensorData = (data) => {
     const sensorData = data.slice(0,7);
-    // console.log("addSensorData: ", sensorData);
     return function (dispatch) {
         if (data[7] === "1") {
             dispatch(initAddSensorDataOne(sensorData));
@@ -700,6 +693,7 @@ export const getOverallAverageLag = () => {
 };
 
 export const saveDancerNames = (metadata, sessionId) => {
+    console.log("saveDancerNames: ", metadata.dancerNames[1], metadata.dancerNames[2], metadata.dancerNames[3])
     return function (dispatch) {
         dispatch(getNewSessionId);
         dispatch(initSaveDancerNames());
@@ -709,9 +703,9 @@ export const saveDancerNames = (metadata, sessionId) => {
                 "http://localhost:3001/savedancernames",
                 null,
                 { params: {
-                    "dancer1": metadata.dancerNames && metadata.dancerNames[1] ? metadata.dancerNames[1] : "Dancer 1",
-                    "dancer2": metadata.dancerNames && metadata.dancerNames[2] ? metadata.dancerNames[2] : "Dancer 2",
-                    "dancer3": metadata.dancerNames && metadata.dancerNames[3] ? metadata.dancerNames[3] : "Dancer 3",
+                    "dancer1": metadata.dancerNames[1] ? metadata.dancerNames[1] : "Dancer 1",
+                    "dancer2": metadata.dancerNames[2] ? metadata.dancerNames[2] : "Dancer 2",
+                    "dancer3": metadata.dancerNames[3] ? metadata.dancerNames[3] : "Dancer 3",
                     "id": sessionId
                 }}
             )
@@ -738,14 +732,16 @@ export const savePoint = (data, sessionId) => {
 };
 
 export const markPosPrediction = (data, sessionId, accuratePos) => {
+    console.log(accuratePos)
     return function (dispatch) {
         dispatch(initMarkPosPrediction());
+        var timestamp = data[0].includes('.') ? data[0].split('.')[0]+'000000' : data[0];
         axios
             .post(
                 "http://localhost:3001/markposprediction",
                 null,
                 { params: {
-                    "timestamp": data[0],
+                    "timestamp": timestamp,
                     "id": sessionId,
                     "accuratePos": accuratePos,
                 }}
@@ -758,14 +754,15 @@ export const markPosPrediction = (data, sessionId, accuratePos) => {
 export const markMovePrediction = (data, sessionId, accurateMov) => {
     return function (dispatch) {
         dispatch(initMarkMovePrediction());
+        var timestamp = data[0].includes('.') ? data[0].split('.')[0]+'000000' : data[0];
         axios
             .post(
                 "http://localhost:3001/markmoveprediction",
                 null,
                 { params: {
-                    "timestamp": data[0],
+                    "timestamp": timestamp,
                     "id": sessionId,
-                    "accurateMov": accurateMov,
+                    "accurateMove": accurateMov,
                 }}
             )
             .then(res => dispatch(markMovePredictionSuccess(res.data['response'])))

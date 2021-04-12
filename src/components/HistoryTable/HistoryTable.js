@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from "react-redux";
@@ -48,7 +48,7 @@ const Table = styled.table`
 `
 
 const Tr = styled.tr`
-    max-height: 40px;
+    min-height: 40px;
     border-radius: 6px;
 `
 
@@ -76,12 +76,6 @@ const Td = styled.td`
         border-top-right-radius: 8px; 
     }
     background-color: ${colours.gray6}
-`
-
-const A = styled.a`
-    font-size: 16px;
-    text-decoration: none;
-    color: ${colours.darkBlue}
 `
 
 const Text = styled.div`
@@ -126,12 +120,12 @@ const HistoryTable = () => {
                 {graphData.length === 0 ?
                     <Text>Not connected to backend</Text>
                     : <Table>
+                        <tbody>
                         <Tr>
                             <Th>Id</Th>
                             <Th>Date</Th>
                             <Th>Time</Th>
                             <Th>Dancers</Th>
-                            {/* <Th>Accuracy</Th> */}
                             <Th>View Session</Th>
                         </Tr>
                         {Object.entries(items).map((item, index) => {
@@ -142,7 +136,8 @@ const HistoryTable = () => {
 
                             // Convert UTC to SGT
                             var time = item[1]["time"];
-                            var sgtTime = time[0] + String(parseInt(time[1])+8) + time.substring(2)
+                            var hour = parseInt(time[0]+time[1]) + 8;
+                            var sgtTime = hour + time.substring(2)
 
                             return (
                                 <Tr key={index}>
@@ -150,7 +145,6 @@ const HistoryTable = () => {
                                     <Td>{item[1]["date"]}</Td>
                                     <Td>{sgtTime}</Td>
                                     <Td>{dancerOneName + ", " + dancerTwoName + ", " + dancerThreeName}</Td>
-                                    {/* <Td>Accuracy</Td> */}
                                     <Td>
                                         <Link
                                             style={{
@@ -166,6 +160,7 @@ const HistoryTable = () => {
                                 </Tr>
                             )
                         })}
+                        </tbody>
                     </Table>}
             </TableDiv>
         </HistoryTableDiv>
