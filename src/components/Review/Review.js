@@ -12,6 +12,7 @@ import ValueCard from '../ValueCard/ValueCard';
 import { getPastSession, getPastSessions, saveDancerNames, savePoint } from "../../store/data";
 
 import colours from '../../colours';
+import chartColours from '../../chartColours';
 
 // calc(100vh - 100px);
 const Body = styled.div`
@@ -85,7 +86,7 @@ const Review = (props) => {
 
     useEffect(() => {
         if (sessionId !== 'current') {
-            dispatch(getPastSession(sessionId))
+            dispatch(getPastSession(sessionId));
         }
         else {
             dispatch(getPastSessions())
@@ -93,6 +94,7 @@ const Review = (props) => {
     }, [dispatch, sessionId]);
 
     if (sessionId === 'current') {
+        console.log('current - chartData: ', chartData);
         chartData = data ? data : [];
     }
     else {
@@ -140,7 +142,7 @@ const Review = (props) => {
             </Overall>
             <Stream>
                 <BasicPieChart grid-area="lagPerMove" data={chartData} />
-                <BasicBarChart grid-area='movesCount' data={chartData} component='review' />
+                <BasicBarChart grid-area='movesCount' data={chartData} component='review' session={sessionId} />
                 <SessionTable session={sessionId} />
             </Stream>
         </Body>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
     CartesianGrid,
     Bar,
@@ -46,7 +46,13 @@ const tooltipTextStyle = {
     color: colours.gray3
 }
 
-const BasicBarChart = ({ data, noData, component }) => {
+const BasicBarChart = ({ component, data, noData, session }) => {
+
+    // const { data, specificHistory } = useSelector(state => state);
+
+    // useEffect((data) => {
+    //     console.log('basic bar chart - data: ', data)
+    // })
 
     const movesAndLags = component === "review" ?
         data.map(item => ({

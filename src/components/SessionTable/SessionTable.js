@@ -199,9 +199,9 @@ const SessionTable = ({ session }) => {
                             <col span="1" style={{width: '4%'}}/>
                             <col span="1" style={{width: '6%'}}/>
                             <col span="1" style={{width: '4%'}}/>
-                            <col span="1" style={{width: '4%'}}/>
-                            <col span="4" style={{width: '6%'}}/>
-                            <col span="1" style={{width: '10%'}}/>
+                            <col span="1" style={{width: '6%'}}/>
+                            <col span="4" style={{width: '5%'}}/>
+                            <col span="1" style={{width: '8%'}}/>
                         </colgroup>
                         <thead>
                             <tr>
@@ -229,7 +229,7 @@ const SessionTable = ({ session }) => {
                                         <Td>{item[1] + ", " + item[2] + ", " + item[3]}</Td>
                                         <Td>{String(item[5]).split('.')[0]}</Td>
                                         <Td>{String(item[6]).substring(0, 5)}%</Td>
-                                        <Td>{item[7] ? String((item[7]+1)%3) : 'No data'}</Td>
+                                        <Td>{item[7] ? String(item[7]) : 'No data'}</Td>
                                         <Td><input type="checkbox" name="move" defaultChecked={item[9]} onClick={() => handleMoveCheckbox(index)} /></Td>
 
                                         <Td>{correctMoves[index]? <p>&#10004;</p> : <p>&#10008;</p>}</Td>
