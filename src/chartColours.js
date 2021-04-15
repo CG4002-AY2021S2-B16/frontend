@@ -12,13 +12,14 @@ const chartColours = {
     // Grays
     pointhigh: '#333333',
     // gray2: '#4F4F4F',
-    // gray3: '#828282',
+    // ray3: '#828282',
     wipetable: '#BDBDBD',
     // gray5: '#E0E0E0',
     // gray6: '#F2F2F2',
 
     // Others
     roll: '#F2C94C',
+    logout: '#F2C94C',
     // lightYellow: '#FCE498',
     // darkRed: '#B80B0B',
     // red: '#B80B0B',

@@ -46,7 +46,7 @@ const BasicPieChart = ({ data }) => {
     var moveCounts = countUnique(moves);
     moveCounts.sort(function(a, b){
         // if(a.move === 'roll') { console.log('!roll'); return 1; }
-        if (b.move === 'roll') { return -1; }
+        if (b.move === 'roll' || b.move ==='logout') { return -1; }
         if(a.move < b.move) { return -1; }
         if(a.move > b.move) { return 1; }
         return 0;
@@ -74,9 +74,6 @@ const BasicPieChart = ({ data }) => {
                         dataKey="count"
                         label
                     >
-                        {/* {
-                            Object.keys(chartColours).map((move, index) => { console.log(move); return (<Cell key={index} fill={chartColours[move]} />)})
-                        } */}
                         {
                             moveCounts.map((move, index) => <Cell key={index} fill={chartColours[move.move]} />)
                         }
